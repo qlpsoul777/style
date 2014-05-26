@@ -3,6 +3,8 @@ package com.qlp.commons.Reflection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by qlp on 2014/5/26.
  */
@@ -17,7 +19,11 @@ public class ReflectionUtils {
      * @return
      */
     public static Object getFieldValue(Object obj, String fieldName) {
-        return null;
+        Class clazz = obj.getClass();
+        Field field = org.springframework.util.ReflectionUtils.findField(clazz,fieldName);
+        org.springframework.util.ReflectionUtils.makeAccessible(field);
+        Object fieldValue = org.springframework.util.ReflectionUtils.getField(field,obj);
+        return fieldValue;
     }
 
     /**
@@ -28,6 +34,9 @@ public class ReflectionUtils {
      * @param fieldValue
      */
     public static void setFieldValue(Object obj, String fieldName, Object fieldValue) {
-
+        Class clazz = obj.getClass();
+        Field field = org.springframework.util.ReflectionUtils.findField(clazz,fieldName);
+        org.springframework.util.ReflectionUtils.makeAccessible(field);
+        org.springframework.util.ReflectionUtils.setField(field,obj,fieldValue);
     }
 }
