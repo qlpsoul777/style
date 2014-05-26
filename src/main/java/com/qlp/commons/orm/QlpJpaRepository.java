@@ -27,5 +27,5 @@ public abstract interface QlpJpaRepository<T,ID extends Serializable> extends Jp
 
     public abstract Page<T> queryPageByMap(Map<String,Object> map,Pageable pageable);
 
-    public abstract Page<T> queryPageByCriteria(Criteria criteria, Sort sort);
+    public abstract Page<T> queryPageByCriteria(Criteria criteria, Pageable pageable);
 }
