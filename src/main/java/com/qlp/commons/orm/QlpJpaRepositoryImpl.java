@@ -1,11 +1,12 @@
 package com.qlp.commons.orm;
 
+import com.qlp.commons.Reflection.ReflectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
+import org.hibernate.internal.CriteriaImpl;
+import org.hibernate.transform.ResultTransformer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -15,10 +16,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by qlp on 14-4-2.
@@ -42,17 +40,7 @@ public class QlpJpaRepositoryImpl<T,ID extends Serializable> extends SimpleJpaRe
 
     public List<T> queryByMap(Map<String, Object> map, Sort sort) {
         Criteria criteria = createCriteria(map);
-        Iterator it;
-        if (sort != null) {
-            for (it = sort.iterator(); it.hasNext(); ) {
-                Sort.Order order = (Sort.Order) sort.iterator();
-                if (order.getDirection().equals(Sort.Direction.ASC)) {
-                    criteria.addOrder(Order.asc(order.getProperty()));
-                } else {
-                    criteria.addOrder(Order.desc(order.getProperty()));
-                }
-            }
-        }
+        createCriteria(criteria, sort);
         return criteria.list();
     }
 
@@ -61,6 +49,53 @@ public class QlpJpaRepositoryImpl<T,ID extends Serializable> extends SimpleJpaRe
     }
 
     public List<T> queryByCriteria(Criteria criteria, Sort sort) {
+        createCriteria(criteria, sort);
+        return criteria.list();
+    }
+
+    public Page<T> queryPageByMap(Map<String, Object> map, Pageable pageable) {
+        Criteria c = getSession().createCriteria(this.entityClass);
+        long total = countCriteriaList(c);
+        c.setFirstResult(pageable.getOffset()).setMaxResults(pageable.getPageSize());
+        Sort sort = pageable.getSort();
+        createCriteria(c, sort);
+        Page page = new PageImpl(c.list(), pageable, total);
+        return page;
+    }
+
+    public Page<T> queryPageByCriteria(Criteria criteria, Pageable pageable) {
+        long total = countCriteriaList(criteria);
+        criteria.setFirstResult(pageable.getOffset()).setMaxResults(pageable.getPageSize());
+        Sort sort = pageable.getSort();
+        createCriteria(criteria, sort);
+        Page page = new PageImpl(criteria.list(), pageable, total);
+        return null;
+    }
+
+    private long countCriteriaList(Criteria c) {
+        CriteriaImpl impl = (CriteriaImpl) c;
+        // 先把Projection、ResultTransformer、OrderBy取出来,清空三者后再执行Count操作
+        Projection projection = impl.getProjection();
+        ResultTransformer resultTransformer = impl.getResultTransformer();
+        List<CriteriaImpl.OrderEntry> orderEntries = null;
+        orderEntries = (List) ReflectionUtils.getFieldValue(impl, "orderEntries");
+        ReflectionUtils.setFieldValue(impl, "orderEntries", new ArrayList());
+        //获取记录总数
+        Long totalCount = (Long) c.setProjection(Projections.rowCount()).uniqueResult();
+        long total = totalCount != null ? totalCount.longValue() : 0L;
+        // 将之前的Projection,ResultTransformer和OrderBy条件重新设回去
+        c.setProjection(projection);
+        if (projection == null) {
+            c.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
+        }
+        if (resultTransformer != null) {
+            c.setResultTransformer(resultTransformer);
+        }
+        ReflectionUtils.setFieldValue(impl, "orderEntries", orderEntries);
+        return total;
+    }
+
+    private Criteria createCriteria(Criteria criteria, Sort sort) {
         Iterator it;
         if (sort != null) {
             for (it = sort.iterator(); it.hasNext(); ) {
@@ -72,18 +107,7 @@ public class QlpJpaRepositoryImpl<T,ID extends Serializable> extends SimpleJpaRe
                 }
             }
         }
-        return criteria.list();
-    }
-
-    public Page<T> queryPageByMap(Map<String, Object> map,Pageable pageable) {
-        Criteria c = getSession().createCriteria(this.entityClass);
-        long total = 5L;
-        Page page = new PageImpl(c.list(),pageable,total);
-        return page;
-    }
-
-    public Page<T> queryPageByCriteria(Criteria criteria, Sort sort) {
-        return null;
+        return criteria;
     }
 
     private Criteria createCriteria(Map<String, Object> map) {
