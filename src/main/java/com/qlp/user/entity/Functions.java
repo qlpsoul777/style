@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 /**
  * Created by qlp on 14-5-19.
+ * 模块下的功能实体
  */
 @Entity
 @Table(name = "com_qlp_style_func")
@@ -18,7 +19,7 @@ public class Functions {
     private String visiable = ParameterUtils.ENABLE;  //可见性，默认为可见
     private Integer sort;  //排序字段
 
-    private Application application;
+    private Application application;  //关联模块
 
     @Id
     public String getId() {

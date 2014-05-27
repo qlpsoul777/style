@@ -12,11 +12,11 @@ import java.util.List;
 
 /**
  * Created by qlp on 14-4-2.
- *
+ * 用户实体
  */
 @Entity
-@Table(name="com_qlp_style_user")
-public class User extends TopEntity{
+@Table(name = "com_qlp_style_user")
+public class User extends TopEntity {
 
     private String loginName;  //登录名
     private String password;  //密码
@@ -112,8 +112,8 @@ public class User extends TopEntity{
         this.type = type;
     }
 
-    @ManyToMany(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
-    @JoinTable(name = "com_qlp_style_user_role",joinColumns = {@JoinColumn(name = "user_id")},inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinTable(name = "com_qlp_style_user_role", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("name")
     public List<Role> getRoles() {
@@ -124,8 +124,10 @@ public class User extends TopEntity{
         this.roles = roles;
     }
 
-    public User(){}
-    public User(String loginName,String password) {
+    public User() {
+    }
+
+    public User(String loginName, String password) {
         this.loginName = loginName;
         this.password = password;
     }

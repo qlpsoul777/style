@@ -26,6 +26,12 @@ public class FunctionServiceImpl implements FunctionService {
         this.functionsDao = functionsDao;
     }
 
+    /**
+     * 根据用户id查询用户拥有的功能权限
+     *
+     * @param userId
+     * @return
+     */
     public List<Functions> findFunctionsByUser(String userId) {
         List<Functions> funcs = null;
         if (StringUtils.isNotBlank(userId)) {

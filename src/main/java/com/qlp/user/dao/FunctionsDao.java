@@ -11,6 +11,12 @@ import java.util.List;
  */
 public interface FunctionsDao extends QlpJpaRepository<Functions, String> {
 
+    /**
+     * 根据用户id查询用户拥有的功能权限
+     *
+     * @param userId
+     * @return
+     */
     @Query("select f from Functions f join f.application a join a.roles r"
             + " join r.members u where r.state = 'ENABLE' and u.id = ?1"
             + " order by f.sort")

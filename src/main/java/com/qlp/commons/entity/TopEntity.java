@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * Created by qlp on 14-4-2.
- *
+ * 顶层实体类用于被其他类继承
  */
 @MappedSuperclass
 @Access(AccessType.PROPERTY)
@@ -17,8 +17,8 @@ public class TopEntity {
     protected Date updateTime;//更新时间
 
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy="uuid2")
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     public String getId() {
         return id;
     }
@@ -27,7 +27,7 @@ public class TopEntity {
         this.id = id;
     }
 
-    @Column(updatable=false)
+    @Column(updatable = false)
     public Date getCreateTime() {
         return createTime;
     }
@@ -48,7 +48,7 @@ public class TopEntity {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        TopEntity other = (TopEntity)obj;
+        TopEntity other = (TopEntity) obj;
         if (getId() == null) {
             return false;
         }

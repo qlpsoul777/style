@@ -9,5 +9,11 @@ import java.util.List;
  */
 public interface FunctionService {
 
+    /**
+     * 根据用户id查询用户拥有的功能权限
+     *
+     * @param userId
+     * @return
+     */
     List<Functions> findFunctionsByUser(String userId);
 }

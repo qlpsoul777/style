@@ -1,15 +1,12 @@
 package com.qlp.commons.Reflection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.Field;
 
 /**
  * Created by qlp on 2014/5/26.
+ * 反射工具类
  */
 public class ReflectionUtils {
-    private static Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
 
     /**
      * 获取指定对象指定属性名的值
@@ -20,9 +17,9 @@ public class ReflectionUtils {
      */
     public static Object getFieldValue(Object obj, String fieldName) {
         Class clazz = obj.getClass();
-        Field field = org.springframework.util.ReflectionUtils.findField(clazz,fieldName);
+        Field field = org.springframework.util.ReflectionUtils.findField(clazz, fieldName);
         org.springframework.util.ReflectionUtils.makeAccessible(field);
-        Object fieldValue = org.springframework.util.ReflectionUtils.getField(field,obj);
+        Object fieldValue = org.springframework.util.ReflectionUtils.getField(field, obj);
         return fieldValue;
     }
 
@@ -35,8 +32,8 @@ public class ReflectionUtils {
      */
     public static void setFieldValue(Object obj, String fieldName, Object fieldValue) {
         Class clazz = obj.getClass();
-        Field field = org.springframework.util.ReflectionUtils.findField(clazz,fieldName);
+        Field field = org.springframework.util.ReflectionUtils.findField(clazz, fieldName);
         org.springframework.util.ReflectionUtils.makeAccessible(field);
-        org.springframework.util.ReflectionUtils.setField(field,obj,fieldValue);
+        org.springframework.util.ReflectionUtils.setField(field, obj, fieldValue);
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by qlp on 14-5-19.
+ * 角色实体
  */
 @Entity
 @Table(name = "com_qlp_style_role")
@@ -47,7 +48,10 @@ public class Role extends TopEntity {
         this.name = name;
     }
 
-    @ManyToMany(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY,mappedBy = "roles")
+    /**
+     * 角色为关系的维护端
+     */
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "roles")
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("loginName")
     public List<User> getMembers() {
@@ -58,8 +62,11 @@ public class Role extends TopEntity {
         this.members = members;
     }
 
-    @ManyToMany(targetEntity = Application.class,cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
-    @JoinTable(name = "com_qlp_style_role_app",joinColumns = {@JoinColumn(name = "role_id")},inverseJoinColumns = {@JoinColumn(name = "app_id")})
+    /**
+     * 角色为关系的维护端
+     */
+    @ManyToMany(targetEntity = Application.class, cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinTable(name = "com_qlp_style_role_app", joinColumns = {@JoinColumn(name = "role_id")}, inverseJoinColumns = {@JoinColumn(name = "app_id")})
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     public List<Application> getApps() {

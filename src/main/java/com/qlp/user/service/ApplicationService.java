@@ -9,5 +9,11 @@ import java.util.List;
  */
 public interface ApplicationService {
 
+    /**
+     * 根据用户id查询用户拥有的模块权限
+     *
+     * @param userId
+     * @return
+     */
     List<Application> findApplicationByUser(String userId);
 }

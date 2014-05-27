@@ -17,6 +17,7 @@ import java.util.Map;
  */
 @NoRepositoryBean
 public abstract interface QlpJpaRepository<T,ID extends Serializable> extends JpaRepository<T,ID>{
+
     public abstract List<T> queryByMap(Map<String, Object> map);
 
     public abstract List<T> queryByMap(Map<String, Object> map, Sort sort);

@@ -10,10 +10,11 @@ import java.util.List;
 
 /**
  * Created by qlp on 14-5-19.
+ * 模块实体
  */
 @Entity
 @Table(name = "com_qlp_style_app")
-public class Application{
+public class Application {
 
     private String id;  //主键
     private String name;  //名称
@@ -74,7 +75,7 @@ public class Application{
         this.sort = sort;
     }
 
-    @ManyToMany(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY,mappedBy = "apps")
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "apps")
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("name")
     public List<Role> getRoles() {
@@ -85,7 +86,7 @@ public class Application{
         this.roles = roles;
     }
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "application")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "application")
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("sort")
     public List<Functions> getFuncs() {

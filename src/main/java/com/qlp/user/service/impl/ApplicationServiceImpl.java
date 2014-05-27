@@ -26,6 +26,12 @@ public class ApplicationServiceImpl implements ApplicationService {
         this.applicationDao = applicationDao;
     }
 
+    /**
+     * 根据用户id查询用户拥有的模块权限
+     *
+     * @param userId
+     * @return
+     */
     public List<Application> findApplicationByUser(String userId) {
         List<Application> apps = null;
         if (StringUtils.isNotBlank(userId)) {
