@@ -15,6 +15,36 @@
 </head>
 <body>
 <h1>恭喜您: ${user.loginName}，登录成功</h1>
+<table>
+    <thead>
+    <th>模块id</th>
+    <th>模块名</th>
+    </thead>
+    <tbody>
+    <c:forEach items="${apps}" var="a">
+        <tr>
+            <td>${a.id}</td>
+            <td>${a.name}</td>
+        </tr>
+    </c:forEach>
+    </tbody>
+</table>
+<table>
+    <thead>
+    <th>功能id</th>
+    <th>功能名</th>
+    <th>模块名</th>
+    </thead>
+    <tbody>
+    <c:forEach items="${funcs}" var="f">
+        <tr>
+            <td>${f.id}</td>
+            <td>${f.name}</td>
+            <td>${f.application.name}</td>
+        </tr>
+    </c:forEach>
+    </tbody>
+</table>
 </body>
 </html>
 
