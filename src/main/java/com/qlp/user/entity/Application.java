@@ -23,7 +23,7 @@ public class Application{
     private Integer sort;  //排序字段
 
     private List<Role> roles = new ArrayList<Role>();  //对应的角色
-    private List<Function> funcs = new ArrayList<Function>();  //对应的功能
+    private List<Functions> funcs = new ArrayList<Functions>();  //对应的功能
 
     @Id
     public String getId() {
@@ -88,11 +88,11 @@ public class Application{
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "application")
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("sort")
-    public List<Function> getFuncs() {
+    public List<Functions> getFuncs() {
         return funcs;
     }
 
-    public void setFuncs(List<Function> funcs) {
+    public void setFuncs(List<Functions> funcs) {
         this.funcs = funcs;
     }
 }
