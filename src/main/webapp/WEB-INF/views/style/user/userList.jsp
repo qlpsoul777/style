@@ -11,6 +11,7 @@
     <title>用户管理列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${ctx}/static/css/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="${ctx}/static/css/font-awesome.css">
     <script src="${ctx}/static/js/jquery.js"></script>
     <script src="${ctx}/static/js/bootstrap.js"></script>
     <script type="text/javascript">
@@ -67,8 +68,8 @@
         <form id="queryForm" action="${ctx}/user/index/list/${type}" method="get">
             <div class="span8">
                 <div>
-                <h3>用户管理列表</h3>
-            </div>
+                  <h3>用户管理列表</h3>
+                </div>
                 <div>
                     <ul>
                         <li><h4>用户名：</h4></li>
@@ -97,7 +98,7 @@
                         <th>用户名</th>
                         <th>角色名</th>
                         <th>联系方式</th>
-                        <th>是否启用</th>
+                        <th>状态</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -109,10 +110,10 @@
                             <td>${user.phoneNum}</td>
                             <td>
                                 <c:if test="${user.state eq 'ENABLE'}">
-                                    是
+                                    <i class="icon-ok-sign">使用中</i>
                                 </c:if>
                                 <c:if test="${user.state eq 'DISENABLE'}">
-                                    否
+                                    <i class="icon-remove-sign">已禁用</i>
                                 </c:if>
                             </td>
                         </tr>
