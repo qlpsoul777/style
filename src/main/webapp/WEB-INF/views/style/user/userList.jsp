@@ -13,17 +13,117 @@
     <link rel="stylesheet" href="${ctx}/static/css/bootstrap.css" media="screen">
     <script src="${ctx}/static/js/jquery.js"></script>
     <script src="${ctx}/static/js/bootstrap.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            // 处理全选
+            $('#chk_all').click(function () {
+                $('input[name = "chkName"]').prop('checked', $('#chk_all').prop('checked'));
+            });
+            //行点击事件
+            $('#queryTable tbody tr').css({'cursor': 'pointer'}).on('click', function () {
+                window.location.href = '${ctx}/user/index/info?id=' + $(this).attr('data-row-id');
+            })
+            $('input[name="chkName"]').parent('td').on('click', function (event) {
+                event.stopPropagation();
+            });
+        });
+        //批量删除
+        function deleteAll() {
+            var msg = "您确定要删除吗？";
+            var names = document.getElementsByName("chkName");
+            var ids = "";
+            if (names.length >= 1) {
+                for (var i = 0; i < names.length; i++) {
+                    if (names[i].checked == true) {
+                        ids = ids + names[i].value + ",";
+                    }
+                }
+                ids = ids.substring(0, ids.length - 1);
+            }
+            if (ids.length == 0) {
+                alert("请选择删除的项！");
+                return false;
+            } else {
+                if (confirm(msg) == true) {
+                    arrayIds(ids);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        function arrayIds(ids) {
+            $("#ids").val(ids);
+            $('#queryForm')[0].method = 'get';
+            $('#queryForm')[0].action = '${ctx}/user/index/deleteBatch?ids=' + ids;
+            $('#queryForm').submit();
+        }
+    </script>
 </head>
 <body>
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span2"></div>
-        <div class="span8">
-            <div class="row-fluid">
+        <form id="queryForm" action="${ctx}/user/index/list/${type}" method="get">
+            <div class="span8">
+                <div>
                 <h3>用户管理列表</h3>
-
             </div>
-        </div>
+                <div>
+                    <ul>
+                        <li><h4>用户名：</h4></li>
+                        <li><input type="text" name="userName" value="${userName}" placeholder="例：张三"/></li>
+                        <li><h4>角色名：</h4></li>
+                        <li><input type="text" name="roleName" value="${roleName}" placeholder="例：系统管理员"/></li>
+                        <li>
+                            <button id="subFind" type="submit" class="btn-success">查询</button>
+                        </li>
+                    </ul>
+                    </br>
+                    <ul>
+                        <li>
+                            <a href="${ctx}/user/index/create/${type}" class="btn-success">新增</a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-danger" id="deleteUser" onclick="deleteAll()">删除</a>
+                            <input type="hidden" name="ids" id="ids"/>
+                        </li>
+                    </ul>
+                </div>
+                <table class="table" id="queryTable">
+                    <thead>
+                    <tr data-row-id="${user.id}">
+                        <th><input type="checkbox" id="chk_all" name="chk_all"></th>
+                        <th>用户名</th>
+                        <th>角色名</th>
+                        <th>联系方式</th>
+                        <th>是否启用</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${pageInfo.content}" var="user">
+                        <tr>
+                            <td><input type="checkbox" name="chkName" value="${user.id}"/></td>
+                            <td>${user.name}</td>
+                            <td>${user.roles.name}</td>
+                            <td>${user.phoneNum}</td>
+                            <td>
+                                <c:if test="${user.state eq 'ENABLE'}">
+                                    是
+                                </c:if>
+                                <c:if test="${user.state eq 'DISENABLE'}">
+                                    否
+                                </c:if>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+                <div class="pagination pagination-centered">
+                    <qlp:page page="${pageInfo}" formId="queryForm"></qlp:page>
+                </div>
+            </div>
+        </form>
         <div class="span2"></div>
     </div>
 </div>

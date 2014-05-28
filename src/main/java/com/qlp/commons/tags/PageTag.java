@@ -19,14 +19,14 @@ public class PageTag extends TagSupport {
     private Page<Object> page;  //分页对象
     private StringBuilder html;  //输出的HTML内容
     private String formId;  //表单id
-    private String style = "styleOne";  //分页样式，默认为样式1，如果需要其他样式可自定义
+    private String cssStyle = "styleOne";  //分页样式，默认为样式1，如果需要其他样式可自定义
 
-    public String getStyle() {
-        return style;
+    public String getCssStyle() {
+        return cssStyle;
     }
 
-    public void setStyle(String style) {
-        this.style = style;
+    public void setCssStyle(String cssStyle) {
+        this.cssStyle = cssStyle;
     }
 
     public Page<Object> getPage() {
@@ -51,7 +51,7 @@ public class PageTag extends TagSupport {
             return super.EVAL_PAGE;
         }
         this.html.append("<ul>").append("\n");
-        if (StringUtils.equals(this.style, "styleOne")) {
+        if (StringUtils.equals(this.cssStyle, "styleOne")) {
             this.html.append(styleOne());
         }
         try {
@@ -132,7 +132,6 @@ public class PageTag extends TagSupport {
         }
         //总页数大于10页
         else {
-
         }
         return sbLess;
     }
