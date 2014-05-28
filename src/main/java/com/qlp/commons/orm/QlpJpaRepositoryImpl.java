@@ -20,26 +20,25 @@ import java.util.*;
 
 /**
  * Created by qlp on 14-4-2.
- *
  */
 @NoRepositoryBean
-public class QlpJpaRepositoryImpl<T,ID extends Serializable> extends SimpleJpaRepository<T,ID> implements QlpJpaRepository<T,ID>{
+public class QlpJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements QlpJpaRepository<T, ID> {
 
     private final EntityManager em;
-    private  Class<T> entityClass;
+    private Class<T> entityClass;
 
-    QlpJpaRepositoryImpl(Class<T> entityClass,EntityManager em){
-        super(entityClass,em);
+    QlpJpaRepositoryImpl(Class<T> entityClass, EntityManager em) {
+        super(entityClass, em);
         this.em = em;
         this.entityClass = entityClass;
     }
 
     public List<T> queryByMap(Map<String, Object> map) {
-        return createCriteria(map).list();
+        return mapToCriteria(map).list();
     }
 
     public List<T> queryByMap(Map<String, Object> map, Sort sort) {
-        Criteria criteria = createCriteria(map);
+        Criteria criteria = mapToCriteria(map);
         createCriteria(criteria, sort);
         return criteria.list();
     }
@@ -54,7 +53,7 @@ public class QlpJpaRepositoryImpl<T,ID extends Serializable> extends SimpleJpaRe
     }
 
     public Page<T> queryPageByMap(Map<String, Object> map, Pageable pageable) {
-        Criteria c = getSession().createCriteria(this.entityClass);
+        Criteria c = mapToCriteria(map);
         long total = countCriteriaList(c);
         c.setFirstResult(pageable.getOffset()).setMaxResults(pageable.getPageSize());
         Sort sort = pageable.getSort();
@@ -69,7 +68,58 @@ public class QlpJpaRepositoryImpl<T,ID extends Serializable> extends SimpleJpaRe
         Sort sort = pageable.getSort();
         createCriteria(criteria, sort);
         Page page = new PageImpl(criteria.list(), pageable, total);
-        return null;
+        return page;
+    }
+
+    public Criteria mapToCriteria(Map<String, Object> map) {
+        Criteria c = getSession().createCriteria(this.entityClass);
+        Set<Map.Entry<String, Object>> set = map.entrySet();
+        for (Map.Entry<String, Object> entry : set) {
+            Object o = entry.getValue();
+            if ((o != null) && (StringUtils.isNotEmpty(o.toString()))) {
+                Criterion criterion = entryToCriterion((String) entry.getKey(), o);
+                c.add(criterion);
+            }
+        }
+        return c;
+    }
+
+    private Criterion entryToCriterion(String key, Object o) {
+        String[] k = StringUtils.split(key, '_');
+        if (k.length < 2) {
+            return Restrictions.eq(k[0], o); //无后缀
+        }
+        if (StringUtils.equals("eq", k[1])) {
+            return Restrictions.eq(k[0], o); //相等
+        }
+        if (StringUtils.equals("ne", k[1])) {
+            return Restrictions.ne(k[0], o);  //不相等
+        }
+        if (StringUtils.equals("lt", k[1])) {
+            return Restrictions.lt(k[0], o);  //小于
+        }
+        if (StringUtils.equals("le", k[1])) {
+            return Restrictions.le(k[0], o);  //小于等于
+        }
+        if (StringUtils.equals("gt", k[1])) {
+            return Restrictions.gt(k[0], o);  //大于
+        }
+        if (StringUtils.equals("ge", k[1])) {
+            return Restrictions.ge(k[0], o);  //大于等于
+        }
+        if (StringUtils.equals("li", k[1])) {
+            return Restrictions.like(k[0], "%" + o + "%");  //like
+        }
+        if (StringUtils.equals("nl", k[1])) {
+            return Restrictions.not(Restrictions.like(k[0], "%" + o + "%"));  //not like
+        }
+        if (StringUtils.equals("in", k[1])) {
+            return Restrictions.in(k[0], (List) o);  //in
+        }
+        if (StringUtils.equals("ni", k[1])) {
+            return Restrictions.not(Restrictions.in(k[0], (List) o)); //not in
+        }
+        return Restrictions.eq(key, o);
     }
 
     private long countCriteriaList(Criteria c) {
@@ -110,20 +160,7 @@ public class QlpJpaRepositoryImpl<T,ID extends Serializable> extends SimpleJpaRe
         return criteria;
     }
 
-    private Criteria createCriteria(Map<String, Object> map) {
-        Criteria c = getSession().createCriteria(this.entityClass);
-        Set<Map.Entry<String, Object>> set = map.entrySet();
-        for(Map.Entry<String, Object> entry : set){
-            Object o = entry.getValue();
-            if((o != null) && (StringUtils.isNotEmpty(o.toString()))){
-                Criterion criterion = Restrictions.eq((String)entry.getKey(),o);
-                c.add(criterion);
-            }
-        }
-        return c;
-    }
-
     private Session getSession() {
-        return (Session)this.em.getDelegate();
+        return (Session) this.em.getDelegate();
     }
 }

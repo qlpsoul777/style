@@ -13,10 +13,9 @@ import java.util.Map;
 
 /**
  * Created by qlp on 14-4-2.
- *
  */
 @NoRepositoryBean
-public abstract interface QlpJpaRepository<T,ID extends Serializable> extends JpaRepository<T,ID>{
+public abstract interface QlpJpaRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
 
     public abstract List<T> queryByMap(Map<String, Object> map);
 
@@ -26,7 +25,9 @@ public abstract interface QlpJpaRepository<T,ID extends Serializable> extends Jp
 
     public abstract List<T> queryByCriteria(Criteria criteria, Sort sort);
 
-    public abstract Page<T> queryPageByMap(Map<String,Object> map,Pageable pageable);
+    public abstract Page<T> queryPageByMap(Map<String, Object> map, Pageable pageable);
 
     public abstract Page<T> queryPageByCriteria(Criteria criteria, Pageable pageable);
+
+    public Criteria mapToCriteria(Map<String, Object> map);
 }
