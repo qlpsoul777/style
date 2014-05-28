@@ -9,6 +9,7 @@ import com.qlp.user.service.UserService;
 import com.qlp.utils.ParameterUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefaults;
 import org.springframework.stereotype.Controller;
@@ -98,6 +99,18 @@ public class UserController {
         Map<String, Object> map = new HashMap<String, Object>();
         String userName = request.getParameter("userName");  //用户名
         String roleName = request.getParameter("roleName");  //角色名
-        return "/style/user/index";
+        if (StringUtils.isNotBlank(userName)) {
+            map.put("userName", userName);
+        }
+        if (StringUtils.isNotBlank(userName)) {
+            map.put("roleName", roleName);
+        }
+        map.put("type", type);
+        Page<User> pageInfo = userService.findPageByCriteria(map, pageable);
+        model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("type", type);
+        model.addAttribute("userName", userName);
+        model.addAttribute("roleName", roleName);
+        return "/style/user/userList";
     }
 }

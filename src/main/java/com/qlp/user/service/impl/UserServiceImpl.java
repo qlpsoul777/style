@@ -3,10 +3,16 @@ package com.qlp.user.service.impl;
 import com.qlp.user.dao.UserDao;
 import com.qlp.user.entity.User;
 import com.qlp.user.service.UserService;
+import com.qlp.utils.ParameterUtils;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,5 +69,16 @@ public class UserServiceImpl implements UserService {
      */
     public User findByLoginNameAndPassword(String loginName, String password) {
         return userDao.findByLoginNameAndPassword(loginName, password);
+    }
+
+    public Page<User> findPageByCriteria(Map<String, Object> map, Pageable pageable) {
+        Map<String, Object> searchMap = new HashMap<String, Object>();
+        searchMap.put("name_li", map.get("userName"));
+        searchMap.put("type", map.get("type"));
+        Criteria criteria = userDao.mapToCriteria(searchMap);
+        criteria.createAlias("roles", "r")
+                .add(Restrictions.like("r.name", "%" + map.get("roleName") + "%"))
+                .add(Restrictions.eq("r.state", ParameterUtils.ENABLE));
+        return userDao.queryPageByCriteria(criteria, pageable);
     }
 }

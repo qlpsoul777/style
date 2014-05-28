@@ -1,6 +1,9 @@
 package com.qlp.user.service;
 
 import com.qlp.user.entity.User;
+import org.hibernate.Criteria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -18,9 +21,12 @@ public interface UserService {
 
     /**
      * 根据登录名和密码查询用户
+     *
      * @param loginName
      * @param password
      * @return
      */
-    User findByLoginNameAndPassword(String loginName,String password);
+    User findByLoginNameAndPassword(String loginName, String password);
+
+    Page<User> findPageByCriteria(Map<String, Object> map, Pageable pageable);
 }
