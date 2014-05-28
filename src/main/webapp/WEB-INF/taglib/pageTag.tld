@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <display-name>qlp_pageTag</display-name>
+    <tlib-version>1.0</tlib-version>
+    <short-name>qlp</short-name>
+
+    <tag>
+        <description>分页标签</description>
+        <name>page</name>
+        <tag-class>com.qlp.commons.tags.PageTag</tag-class>
+        <body-content>JSP</body-content>
+
+        <attribute>
+            <description>分页对象</description>
+            <name>page</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>对应form id</description>
+            <name>formId</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>
