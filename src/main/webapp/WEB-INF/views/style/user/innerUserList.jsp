@@ -12,6 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${ctx}/static/css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="${ctx}/static/css/font-awesome.css">
+    <link rel="stylesheet" href="${ctx}/static/css/qlp.css">
     <script src="${ctx}/static/js/jquery.js"></script>
     <script src="${ctx}/static/js/bootstrap.js"></script>
     <script type="text/javascript">
@@ -68,9 +69,9 @@
         <form id="queryForm" action="${ctx}/user/index/list/${type}" method="get">
             <div class="span8">
                 <div>
-                    <h3>用户管理列表</h3>
+                    <h3>内部用户管理列表</h3>
                 </div>
-                <div>
+                <div class="toolbar">
                     <ul>
                         <li><h4>用户名：</h4></li>
                         <li><input type="text" name="userName" value="${userName}" placeholder="例：张三"/></li>
@@ -83,17 +84,17 @@
                     </br>
                     <ul>
                         <li>
-                            <a href="${ctx}/user/index/create/${type}" class="btn-success">新增</a>
+                            <a href="${ctx}/user/index/create/${type}" class="btn btn-success">新增</a>
                         </li>
                         <li>
-                            <a href="#" class="btn-danger" id="deleteUser" onclick="deleteAll()">删除</a>
+                            <a href="#" class="btn btn-danger" id="deleteUser" onclick="deleteAll()">删除</a>
                             <input type="hidden" name="ids" id="ids"/>
                         </li>
                     </ul>
                 </div>
                 <table class="table" id="queryTable">
                     <thead>
-                    <tr data-row-id="${user.id}">
+                    <tr>
                         <th><input type="checkbox" id="chk_all" name="chk_all"></th>
                         <th>用户名</th>
                         <th>角色名</th>
@@ -103,18 +104,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${mapList}" var="user">
+                    <c:forEach items="${pageInfo.content}" var="user">
                         <tr>
-                            <td><input type="checkbox" name="chkName" value="${user.uid}"/></td>
-                            <td>${user.uname}</td>
-                            <td>${user.rname}</td>
+                            <td><input type="checkbox" name="chkName" value="${user.id}"/></td>
+                            <td>${user.name}</td>
+                            <td>
+                                <c:forEach items="${user.roles}" var="role">
+                                    ${role.name}&nbsp;
+                                </c:forEach>
+                            </td>
                             <td>${user.sex}</td>
                             <td>${user.email}</td>
                             <td>
-                                <c:if test="${user.ustate eq 'ENABLE'}">
+                                <c:if test="${user.state eq 'ENABLE'}">
                                     <i class="icon-ok-sign">使用中</i>
                                 </c:if>
-                                <c:if test="${user.ustate eq 'DISENABLE'}">
+                                <c:if test="${user.state eq 'DISENABLE'}">
                                     <i class="icon-remove-sign">已禁用</i>
                                 </c:if>
                             </td>
