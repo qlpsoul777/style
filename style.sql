@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50162
 File Encoding         : 65001
 
-Date: 2014-05-27 17:44:53
+Date: 2014-05-29 16:58:56
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -81,6 +81,7 @@ CREATE TABLE `com_qlp_style_role` (
 -- Records of com_qlp_style_role
 -- ----------------------------
 INSERT INTO `com_qlp_style_role` VALUES ('1', null, null, '拥有最高权限', '超级管理员', 'ENABLE');
+INSERT INTO `com_qlp_style_role` VALUES ('2', null, null, null, '普通管理员', 'ENABLE');
 
 -- ----------------------------
 -- Table structure for com_qlp_style_role_app
@@ -128,8 +129,17 @@ CREATE TABLE `com_qlp_style_user` (
 -- ----------------------------
 -- Records of com_qlp_style_user
 -- ----------------------------
-INSERT INTO `com_qlp_style_user` VALUES ('1', null, null, null, null, null, '1', 'root', '张三', '1', null, null, 'ENABLE', 'INNER');
-INSERT INTO `com_qlp_style_user` VALUES ('8195d7ad-f1e7-4bea-b016-337d0a6ff089', '2014-05-14 17:58:40', null, null, null, null, '1', 'admin', '李四', '111111', null, null, 'ENABLE', 'OUTER');
+INSERT INTO `com_qlp_style_user` VALUES ('1', '2014-05-29 12:46:00', null, null, null, 'zhangsan@163.com', '1', 'root', '张三', '1', null, '男', 'ENABLE', 'INNER');
+INSERT INTO `com_qlp_style_user` VALUES ('10', '2014-05-20 12:53:25', null, null, null, 'test3', null, 'test3', '燕十三', '1', null, '男', 'ENABLE', 'INNER');
+INSERT INTO `com_qlp_style_user` VALUES ('2', '2014-05-15 12:52:53', null, null, null, 'wangwu', '1', 'wangwu', '王五', '1', null, '女', 'ENABLE', 'INNER');
+INSERT INTO `com_qlp_style_user` VALUES ('3', '2014-05-23 12:52:58', null, null, null, 'zhaoliu', null, 'zhaoliu', '赵六', '1', null, '女', 'ENABLE', 'INNER');
+INSERT INTO `com_qlp_style_user` VALUES ('4', '2014-04-30 12:53:03', null, null, null, 'chenqi', null, 'chenqi', '陈七', '1', null, '女', 'ENABLE', 'INNER');
+INSERT INTO `com_qlp_style_user` VALUES ('5', '2014-05-14 12:53:06', null, null, null, 'zhuba', null, 'zhuba', '朱八', '1', null, '男', 'ENABLE', 'INNER');
+INSERT INTO `com_qlp_style_user` VALUES ('6', '2014-05-06 12:53:10', null, null, null, 'zhoujiu', null, 'zhoujiu', '周九', '1', null, '男', 'ENABLE', 'INNER');
+INSERT INTO `com_qlp_style_user` VALUES ('7', '2014-05-28 12:53:14', null, null, null, 'test1', null, 'test1', '吴十', '1', null, '男', 'ENABLE', 'INNER');
+INSERT INTO `com_qlp_style_user` VALUES ('8', '2014-05-22 12:53:18', null, null, null, 'test2', null, 'test2', '萧十一', '1', null, '男', 'ENABLE', 'INNER');
+INSERT INTO `com_qlp_style_user` VALUES ('8195d7ad-f1e7-4bea-b016-337d0a6ff089', '2014-05-14 17:58:40', null, null, null, 'lisi@163.com', '1', 'admin', '李四', '111111', null, '女', 'ENABLE', 'INNER');
+INSERT INTO `com_qlp_style_user` VALUES ('9', '2014-05-30 12:53:22', null, null, null, 'test3', null, 'test3', '贺十二', '1', null, '男', 'ENABLE', 'INNER');
 
 -- ----------------------------
 -- Table structure for com_qlp_style_user_role
@@ -148,3 +158,14 @@ CREATE TABLE `com_qlp_style_user_role` (
 -- Records of com_qlp_style_user_role
 -- ----------------------------
 INSERT INTO `com_qlp_style_user_role` VALUES ('1', '1');
+INSERT INTO `com_qlp_style_user_role` VALUES ('8195d7ad-f1e7-4bea-b016-337d0a6ff089', '1');
+INSERT INTO `com_qlp_style_user_role` VALUES ('10', '2');
+INSERT INTO `com_qlp_style_user_role` VALUES ('2', '2');
+INSERT INTO `com_qlp_style_user_role` VALUES ('3', '2');
+INSERT INTO `com_qlp_style_user_role` VALUES ('4', '2');
+INSERT INTO `com_qlp_style_user_role` VALUES ('5', '2');
+INSERT INTO `com_qlp_style_user_role` VALUES ('6', '2');
+INSERT INTO `com_qlp_style_user_role` VALUES ('7', '1');
+INSERT INTO `com_qlp_style_user_role` VALUES ('7', '2');
+INSERT INTO `com_qlp_style_user_role` VALUES ('8', '2');
+INSERT INTO `com_qlp_style_user_role` VALUES ('9', '2');
