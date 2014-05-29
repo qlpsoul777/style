@@ -75,9 +75,9 @@ public class QlpJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
         Criteria c = getSession().createCriteria(this.entityClass);
         Set<Map.Entry<String, Object>> set = map.entrySet();
         for (Map.Entry<String, Object> entry : set) {
-            Object o = entry.getValue();
-            if ((o != null) && (StringUtils.isNotEmpty(o.toString()))) {
-                Criterion criterion = entryToCriterion((String) entry.getKey(), o);
+            Object object = entry.getValue();
+            if ((object != null) && (StringUtils.isNotEmpty(object.toString()))) {
+                Criterion criterion = entryToCriterion((String) entry.getKey(), entry.getValue());
                 c.add(criterion);
             }
         }
