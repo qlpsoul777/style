@@ -4,6 +4,7 @@ import com.qlp.user.dao.UserDao;
 import com.qlp.user.entity.User;
 import com.qlp.user.service.UserService;
 import com.qlp.utils.ParameterUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,12 +74,34 @@ public class UserServiceImpl implements UserService {
 
     public Page<User> findPageByCriteria(Map<String, Object> map, Pageable pageable) {
         Map<String, Object> searchMap = new HashMap<String, Object>();
-        searchMap.put("name_li", map.get("userName"));
-        searchMap.put("type", map.get("type"));
+        String userName = (String) map.get("userName");
+        String roleName = (String) map.get("roleName");
+        String type = (String) map.get("type");
+        if (StringUtils.isNotBlank(userName)) {
+            searchMap.put("name_li", userName);
+        }
+        searchMap.put("type", type);
         Criteria criteria = userDao.mapToCriteria(searchMap);
-        criteria.createAlias("roles", "r")
-                .add(Restrictions.like("r.name", "%" + map.get("roleName") + "%"))
-                .add(Restrictions.eq("r.state", ParameterUtils.ENABLE));
+        if (StringUtils.isNotBlank(roleName)) {
+            criteria.createAlias("roles", "r")
+                    .add(Restrictions.eq("r.name", roleName))
+                    .add(Restrictions.eq("r.state", ParameterUtils.ENABLE));
+        }
         return userDao.queryPageByCriteria(criteria, pageable);
+    }
+
+    @Override
+    public Page<Object[]> findByNameAndType(String userName, String roleName, String type, Pageable pageable) {
+        if (StringUtils.isNotBlank(userName)) {
+            userName = "%" + userName + "%";
+        } else {
+            userName = "%%";
+        }
+        if (StringUtils.isNotBlank(roleName)) {
+            roleName = "%" + roleName + "%";
+        } else {
+            roleName = "%%";
+        }
+        return userDao.findByNameAndType(userName, roleName, type, pageable);
     }
 }

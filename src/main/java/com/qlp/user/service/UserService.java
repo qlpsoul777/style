@@ -29,4 +29,6 @@ public interface UserService {
     User findByLoginNameAndPassword(String loginName, String password);
 
     Page<User> findPageByCriteria(Map<String, Object> map, Pageable pageable);
+
+    Page<Object[]> findByNameAndType(String userName, String roleName, String type, Pageable pageable);
 }

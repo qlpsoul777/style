@@ -10,7 +10,9 @@ import com.qlp.utils.ParameterUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefaults;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,21 +99,39 @@ public class UserController {
     @RequestMapping(value = "list/{type}", method = RequestMethod.GET)
     public String list(HttpServletRequest request, @PageableDefaults(10) Pageable pageable,
                        @PathVariable("type") String type, Model model) {
-        Map<String, Object> map = new HashMap<String, Object>();
         String userName = request.getParameter("userName");  //用户名
         String roleName = request.getParameter("roleName");  //角色名
+        Map<String, Object> map = new HashMap<String, Object>();
         if (StringUtils.isNotBlank(userName)) {
             map.put("userName", userName);
         }
-        if (StringUtils.isNotBlank(userName)) {
+        if (StringUtils.isNotBlank(roleName)) {
             map.put("roleName", roleName);
         }
         map.put("type", type);
         Page<User> pageInfo = userService.findPageByCriteria(map, pageable);
+//        Page<Object[]> pageInfo = userService.findByNameAndType(userName,roleName,type,pageable);
+//        List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
+//        for (int i = 0; i < pageInfo.getContent().size(); i++){
+//            Object[] obj = pageInfo.getContent().get(i);
+//            Map<String, Object> maps = new HashMap<String, Object>();
+//            maps.put("uid", obj[0]);
+//            maps.put("uname", obj[1]);
+//            maps.put("sex", obj[2]);
+//            maps.put("email", obj[3]);
+//            maps.put("ustate", obj[4]);
+//            maps.put("rname", obj[5]);
+//            mapList.add(maps);
+//        }
+//        model.addAttribute("mapList", mapList);
+        String path = "/style/user/userList";
+        if (StringUtils.equals(type, ParameterUtils.INNER)) {
+            path = "/style/user/innerUserList";
+        }
         model.addAttribute("pageInfo", pageInfo);
         model.addAttribute("type", type);
         model.addAttribute("userName", userName);
         model.addAttribute("roleName", roleName);
-        return "/style/user/userList";
+        return path;
     }
 }
