@@ -78,13 +78,13 @@
                         <li><h4>角色名：</h4></li>
                         <li><input type="text" name="roleName" value="${roleName}" placeholder="例：系统管理员"/></li>
                         <li>
-                            <button id="subFind" type="submit" class="btn-success">查询</button>
+                            <button id="subFind" type="submit" class="btn btn-success">查询</button>
                         </li>
                     </ul>
                     </br>
                     <ul>
                         <li>
-                            <a href="${ctx}/user/index/create/${type}" class="btn btn-success">新增</a>
+                            <a href="${ctx}/user/index/createInner" class="btn btn-success">新增</a>
                         </li>
                         <li>
                             <a href="#" class="btn btn-danger" id="deleteUser" onclick="deleteAll()">删除</a>

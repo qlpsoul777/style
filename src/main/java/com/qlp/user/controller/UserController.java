@@ -2,9 +2,11 @@ package com.qlp.user.controller;
 
 import com.qlp.user.entity.Application;
 import com.qlp.user.entity.Functions;
+import com.qlp.user.entity.Role;
 import com.qlp.user.entity.User;
 import com.qlp.user.service.ApplicationService;
 import com.qlp.user.service.FunctionService;
+import com.qlp.user.service.RoleService;
 import com.qlp.user.service.UserService;
 import com.qlp.utils.ParameterUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +36,7 @@ import java.util.Map;
 @RequestMapping(value = "user/index")
 public class UserController {
     private UserService userService;
+    private RoleService roleService;
     private ApplicationService applicationService;
     private FunctionService functionService;
 
@@ -50,6 +53,11 @@ public class UserController {
     @Autowired
     public void setFunctionService(FunctionService functionService) {
         this.functionService = functionService;
+    }
+
+    @Autowired
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
     }
 
     @RequestMapping(value = "first", method = RequestMethod.GET)
@@ -133,5 +141,12 @@ public class UserController {
         model.addAttribute("userName", userName);
         model.addAttribute("roleName", roleName);
         return path;
+    }
+
+    @RequestMapping(value = "createInner", method = RequestMethod.GET)
+    public String createInner(HttpServletRequest request, Model model) {
+        List<Role> roles = roleService.findAllRoles();
+        model.addAttribute("roles", roles);
+        return "/style/user/createInner";
     }
 }
