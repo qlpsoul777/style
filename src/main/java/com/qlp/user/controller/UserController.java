@@ -149,4 +149,24 @@ public class UserController {
         model.addAttribute("roles", roles);
         return "/style/user/createInner";
     }
+
+    @RequestMapping(value = "saveInner", method = RequestMethod.POST)
+    public String saveInner(HttpServletRequest request, Model model) {
+        String loginName = request.getParameter("loginName");
+        String roleIds = request.getParameter("roleIds");
+        List<Role> roles = new ArrayList<Role>();
+        if (StringUtils.isNotBlank(roleIds)) {
+            String[] ids = StringUtils.split(roleIds, ',');
+            for (String roleId : ids) {
+                Role r = roleService.get(roleId);
+                roles.add(r);
+            }
+        }
+        String state = request.getParameter("state");
+        String type = ParameterUtils.INNER;
+        String password = ParameterUtils.INITPASSWORD;
+        User user = new User(loginName, password, state, type, roles);
+        userService.save(user);
+        return "redirect:/user/index/list/" + type;
+    }
 }
