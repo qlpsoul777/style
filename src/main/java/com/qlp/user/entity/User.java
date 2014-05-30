@@ -127,8 +127,11 @@ public class User extends TopEntity {
     public User() {
     }
 
-    public User(String loginName, String password) {
+    public User(String loginName, String password, String state, String type, List<Role> roles) {
         this.loginName = loginName;
         this.password = password;
+        this.state = state;
+        this.type = type;
+        this.roles = roles;
     }
 }

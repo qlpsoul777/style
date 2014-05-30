@@ -12,4 +12,6 @@ public class ParameterUtils {
     public static final String INNER = "INNER";//内部用户
     public static final String OUTER = "OUTER";//外部用户
 
+    public static final String INITPASSWORD = "88888888";//内部用户初始密码
+
 }

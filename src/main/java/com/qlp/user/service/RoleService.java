@@ -15,4 +15,12 @@ public interface RoleService {
      * @return
      */
     List<Role> findAllRoles();
+
+    /**
+     * 根据角色id获取角色
+     *
+     * @param id
+     * @return
+     */
+    Role get(String id);
 }

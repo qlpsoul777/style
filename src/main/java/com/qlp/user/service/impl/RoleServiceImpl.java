@@ -33,4 +33,14 @@ public class RoleServiceImpl implements RoleService {
         String state = ParameterUtils.ENABLE;
         return roleDao.findByState(state);
     }
+
+    /**
+     * 根据角色id获取角色
+     *
+     * @param id
+     * @return
+     */
+    public Role get(String id) {
+        return roleDao.findOne(id);
+    }
 }
