@@ -21,14 +21,37 @@
             $('#chk_all').click(function () {
                 $('input[name = "chkName"]').prop('checked', $('#chk_all').prop('checked'));
             });
-            //行点击事件
-            $('#queryTable tbody tr').css({'cursor': 'pointer'}).on('click', function () {
-                window.location.href = '${ctx}/user/index/info?id=' + $(this).attr('data-row-id');
-            })
-            $('input[name="chkName"]').parent('td').on('click', function (event) {
-                event.stopPropagation();
+            //批量启用/禁用用户
+            $('#batchUse').click(function () {
+                var ids = checkSelect();
+                alert(ids);
             });
+            <%--//行点击事件--%>
+            <%--$('#queryTable tbody tr').css({'cursor': 'pointer'}).on('click', function () {--%>
+            <%--window.location.href = '${ctx}/user/index/info?id=' + $(this).attr('data-row-id');--%>
+            <%--})--%>
+            <%--$('input[name="chkName"]').parent('td').on('click', function (event) {--%>
+            <%--event.stopPropagation();--%>
+            <%--});--%>
         });
+        function checkSelect() {
+            var names = document.getElementsByName("chkName");
+            var ids = "";
+            if (names.length >= 1) {
+                for (var i = 0; i < names.length; i++) {
+                    if (names[i].checked == true) {
+                        ids = ids + names[i].value + ",";
+                    }
+                }
+                ids = ids.substring(0, ids.length - 1);
+            }
+            if (ids.length == 0) {
+                alert("请选择需要操作的项！");
+                return false;
+            } else {
+                return ids;
+            }
+        }
         //批量删除
         function deleteAll() {
             var msg = "您确定要删除吗？";
@@ -87,8 +110,11 @@
                             <a href="${ctx}/user/index/createInner" class="btn btn-success">新增</a>
                         </li>
                         <li>
-                            <a href="#" class="btn btn-danger" id="deleteUser" onclick="deleteAll()">删除</a>
+                            <a href="#" class="btn btn-danger" id="deleteUser" onclick="deleteAll()">批删除</a>
                             <input type="hidden" name="ids" id="ids"/>
+                        </li>
+                        <li>
+                            <a href="#" class="btn btn-warning" id="batchUse">启用/禁用</a>
                         </li>
                     </ul>
                 </div>
