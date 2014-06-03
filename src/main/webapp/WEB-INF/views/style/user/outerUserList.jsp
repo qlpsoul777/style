@@ -16,52 +16,6 @@
     <script src="${ctx}/static/js/jquery.js"></script>
     <script src="${ctx}/static/js/bootstrap.js"></script>
     <script type="text/javascript">
-        $(function () {
-            // 处理全选
-            $('#chk_all').click(function () {
-                $('input[name = "chkName"]').prop('checked', $('#chk_all').prop('checked'));
-            });
-            //批量启用/禁用用户
-            $('#batchUse').click(function () {
-                var ids = checkSelect();
-                var type = '${type}';
-                if (ids.length == 0) {
-                    alert("请选择操作项！");
-                    return false;
-                } else {
-                    window.location.href = '${ctx}/user/index/batchUse?ids=' + ids + '&type=' + type;
-                }
-            });
-            //批量删除
-            $('#deleteUser').click(function () {
-                var ids = checkSelect();
-                if (ids.length == 0) {
-                    alert("请选择删除的项！");
-                    return false;
-                } else {
-                    if (confirm("您确定要删除吗？") == true) {
-                        window.location.href = '${ctx}/user/index/batchDelete?ids=' + ids;
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            });
-        });
-        //获取复选框的值
-        function checkSelect() {
-            var names = document.getElementsByName("chkName");
-            var ids = "";
-            if (names.length >= 1) {
-                for (var i = 0; i < names.length; i++) {
-                    if (names[i].checked == true) {
-                        ids = ids + names[i].value + ",";
-                    }
-                }
-                ids = ids.substring(0, ids.length - 1);
-            }
-            return ids;
-        }
     </script>
 </head>
 <body>
@@ -71,36 +25,23 @@
         <form id="queryForm" action="${ctx}/user/index/list/${type}" method="get">
             <div class="span8">
                 <div>
-                    <h3>内部用户管理列表</h3>
+                    <h3>注册用户管理列表</h3>
                 </div>
                 <div class="toolbar">
                     <ul>
                         <li><h4>用户名：</h4></li>
                         <li><input type="text" name="userName" value="${userName}" placeholder="例：张三"/></li>
                         <li><h4>角色名：</h4></li>
-                        <li><input type="text" name="roleName" value="${roleName}" placeholder="例：系统管理员"/></li>
+                        <li><input type="text" name="roleName" value="${roleName}" placeholder="例：付费注册用户"/></li>
                         <li>
                             <button id="subFind" type="submit" class="btn btn-success">查询</button>
-                        </li>
-                    </ul>
-                    </br>
-                    <ul>
-                        <li>
-                            <a href="${ctx}/user/index/createInner?type=${type}" class="btn btn-success">新增</a>
-                        </li>
-                        <li>
-                            <a href="#" class="btn btn-danger" id="deleteUser">批量删除</a>
-                            <input type="hidden" name="ids" id="ids"/>
-                        </li>
-                        <li>
-                            <a href="#" class="btn btn-warning" id="batchUse">启用/禁用</a>
                         </li>
                     </ul>
                 </div>
                 <table class="table" id="queryTable">
                     <thead>
                     <tr>
-                        <th><input type="checkbox" id="chk_all" name="chk_all"></th>
+                        <th>序号</th>
                         <th>用户名</th>
                         <th>角色名</th>
                         <th>性别</th>
@@ -110,9 +51,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${pageInfo.content}" var="user">
+                    <c:forEach items="${pageInfo.content}" var="user" varStatus="i">
                         <tr>
-                            <td><input type="checkbox" name="chkName" value="${user.id}"/></td>
+                            <td>${i.index+1}</td>
                             <td>${user.name}</td>
                             <td>
                                 <c:forEach items="${user.roles}" var="role">
@@ -130,8 +71,16 @@
                                 </c:if>
                             </td>
                             <td>
-                                <a href="${ctx}/user/index/update?id=${user.id}&type=${type}"
+                                <a href="${ctx}/user/index/update?id=${user.id}&&type=${type}"
                                    class="btn btn-small btn-primary">修改</a>
+                                <c:if test="${user.state eq 'ENABLE'}">
+                                    <a href="${ctx}/user/index/batchUse?ids=${user.id}&type=${type}"
+                                       class="btn btn-small btn-warning">禁用</a>
+                                </c:if>
+                                <c:if test="${user.state eq 'DISENABLE'}">
+                                    <a href="${ctx}/user/index/batchUse?ids=${user.id}&type=${type}"
+                                       class="btn btn-small btn-warning">启用</a>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>

@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>用户管理列表</title>
+    <title>新增用户</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${ctx}/static/css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="${ctx}/static/css/font-awesome.css">
@@ -46,7 +46,7 @@
                             <button class="btn btn-success" type="submit" onclick="sub()">保存</button>
                         </li>
                         <li>
-                            <a href="${ctx}/user/index/list/INNER" class="btn btn-inverse">取消</a>
+                            <a href="${ctx}/user/index/list/INNER" class="btn btn-warning">取消</a>
                         </li>
                     </ul>
                 </div>
