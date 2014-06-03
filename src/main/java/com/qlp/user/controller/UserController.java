@@ -118,21 +118,7 @@ public class UserController {
         }
         map.put("type", type);
         Page<User> pageInfo = userService.findPageByCriteria(map, pageable);
-//        Page<Object[]> pageInfo = userService.findByNameAndType(userName,roleName,type,pageable);
-//        List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
-//        for (int i = 0; i < pageInfo.getContent().size(); i++){
-//            Object[] obj = pageInfo.getContent().get(i);
-//            Map<String, Object> maps = new HashMap<String, Object>();
-//            maps.put("uid", obj[0]);
-//            maps.put("uname", obj[1]);
-//            maps.put("sex", obj[2]);
-//            maps.put("email", obj[3]);
-//            maps.put("ustate", obj[4]);
-//            maps.put("rname", obj[5]);
-//            mapList.add(maps);
-//        }
-//        model.addAttribute("mapList", mapList);
-        String path = "/style/user/userList";
+        String path = "/style/user/outerUserList";
         if (StringUtils.equals(type, ParameterUtils.INNER)) {
             path = "/style/user/innerUserList";
         }
@@ -143,15 +129,28 @@ public class UserController {
         return path;
     }
 
+    /**
+     * 新增内部用户
+     *
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "createInner", method = RequestMethod.GET)
-    public String createInner(HttpServletRequest request, Model model) {
-        List<Role> roles = roleService.findAllRoles();
+    public String createInner(Model model, HttpServletRequest request) {
+        String type = request.getParameter("type");
+        List<Role> roles = roleService.findAllRoles(type);
         model.addAttribute("roles", roles);
         return "/style/user/createInner";
     }
 
+    /**
+     * 保存用户信息
+     *
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "saveInner", method = RequestMethod.POST)
-    public String saveInner(HttpServletRequest request, Model model) {
+    public String saveInner(HttpServletRequest request) {
         String loginName = request.getParameter("loginName");
         String roleIds = request.getParameter("roleIds");
         List<Role> roles = new ArrayList<Role>();
@@ -167,6 +166,93 @@ public class UserController {
         String password = ParameterUtils.INITPASSWORD;
         User user = new User(loginName, password, state, type, roles);
         userService.save(user);
+        return "redirect:/user/index/list/" + type;
+    }
+
+    /**
+     * 批量启用/禁用用户
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "batchUse", method = RequestMethod.GET)
+    public String batchUse(HttpServletRequest request) {
+        String type = request.getParameter("type");
+        String ids = request.getParameter("ids");
+        userService.batchUse(ids);
+        return "redirect:/user/index/list/" + type;
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "batchDelete", method = RequestMethod.GET)
+    public String batchDelete(HttpServletRequest request) {
+        String type = ParameterUtils.INNER;
+        String ids = request.getParameter("ids");
+        userService.batchDelete(ids);
+        return "redirect:/user/index/list/" + type;
+    }
+
+    /**
+     * 修改页面
+     *
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "update", method = RequestMethod.GET)
+    public String update(HttpServletRequest request, Model model) {
+        String id = request.getParameter("id");
+        User user = userService.get(id);
+        String type = request.getParameter("type");
+        List<Role> roles = roleService.findAllRoles(type);
+        List<Role> selectedRoles = user.getRoles();
+        if (!selectedRoles.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (Role r : selectedRoles) {
+                sb.append(r.getId()).append(',');
+            }
+            model.addAttribute("selectedIds", sb.toString());
+        }
+        model.addAttribute("roles", roles);//所有角色
+        model.addAttribute("user", user);
+        model.addAttribute("type", type);
+        return "/style/user/editUser";
+    }
+
+    /**
+     * 修改保存
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "updateSave", method = RequestMethod.POST)
+    public String updateSave(HttpServletRequest request) {
+        String type = request.getParameter("type");
+        String id = request.getParameter("id");
+        String newIds = request.getParameter("roleIds"); //修改后的角色id
+        List<Role> newRoles = new ArrayList<Role>();
+        if (StringUtils.isNotBlank(newIds)) {
+            String[] ids = StringUtils.split(newIds, ',');
+            for (String rId : ids) {
+                Role r = roleService.get(rId);
+                newRoles.add(r);
+            }
+        }
+        String state = request.getParameter("state");
+        User user = userService.get(id);
+        List<Role> oldRoles = user.getRoles();  //修改前的角色
+        // newRoles.removeAll(oldRoles);  //需add的role
+        oldRoles.retainAll(newRoles);  //需delete的role
+        for (Role a : oldRoles) {
+            System.out.println(a.getName() + ",");
+        }
+//        user.setState(state);
+//        userService.save(user);
         return "redirect:/user/index/list/" + type;
     }
 }
