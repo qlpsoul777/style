@@ -19,9 +19,4 @@ public interface UserDao extends QlpJpaRepository<User, String> {
      * @return
      */
     public User findByLoginNameAndPassword(String loginName, String password);
-
-    @Query("select u.id as uid,u.name as uname,u.sex as sex,"
-            + "u.email as email,u.state as ustate,r.name as rname "
-            + "from User u left outer join u.roles r where u.name like ?1 and r.name like ?2 and u.type = ?3")
-    public Page<Object[]> findByNameAndType(String userName, String roleName, String type, Pageable pageable);
 }

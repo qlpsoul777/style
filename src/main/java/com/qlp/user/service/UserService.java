@@ -30,5 +30,19 @@ public interface UserService {
 
     Page<User> findPageByCriteria(Map<String, Object> map, Pageable pageable);
 
-    Page<Object[]> findByNameAndType(String userName, String roleName, String type, Pageable pageable);
+    /**
+     * 批量启用/禁用用户
+     *
+     * @param ids
+     */
+    void batchUse(String ids);
+
+    /**
+     * 批量删除用户
+     *
+     * @param ids
+     */
+    void batchDelete(String ids);
+
+    void delete(String id);
 }

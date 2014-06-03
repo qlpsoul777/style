@@ -90,18 +90,42 @@ public class UserServiceImpl implements UserService {
         return userDao.queryPageByCriteria(criteria, pageable);
     }
 
-    @Override
-    public Page<Object[]> findByNameAndType(String userName, String roleName, String type, Pageable pageable) {
-        if (StringUtils.isNotBlank(userName)) {
-            userName = "%" + userName + "%";
-        } else {
-            userName = "%%";
+    /**
+     * 批量启用/禁用用户
+     *
+     * @param ids
+     */
+    @Transactional(readOnly = false)
+    public void batchUse(String ids) {
+        String[] userIds = StringUtils.split(ids, ',');
+        for (String id : userIds) {
+            User user = get(id);
+            if (StringUtils.equals(user.getState(), ParameterUtils.ENABLE)) {
+                user.setState(ParameterUtils.DISENABLE);
+            } else {
+                user.setState(ParameterUtils.ENABLE);
+            }
+            save(user);
         }
-        if (StringUtils.isNotBlank(roleName)) {
-            roleName = "%" + roleName + "%";
-        } else {
-            roleName = "%%";
-        }
-        return userDao.findByNameAndType(userName, roleName, type, pageable);
     }
+
+    /**
+     * 批量删除用户
+     *
+     * @param ids
+     */
+    @Transactional(readOnly = false)
+    public void batchDelete(String ids) {
+        String[] userIds = StringUtils.split(ids, ',');
+        for (String id : userIds) {
+            delete(id);
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public void delete(String id) {
+        userDao.delete(id);
+        userDao.flush();
+    }
+
 }
