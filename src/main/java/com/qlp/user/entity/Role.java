@@ -19,10 +19,19 @@ public class Role extends TopEntity {
 
     private String name;  //角色名称
     private String state = ParameterUtils.ENABLE;  //是否启用，默认为启用该角色
+    private String type = ParameterUtils.INNER;  //角色类型，默认为内部角色
     private String description;  //角色描述
 
     private List<User> members = new ArrayList<User>();  //角色下的用户
     private List<Application> apps = new ArrayList<Application>();  //角色拥有的应用
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getState() {
         return state;

@@ -27,11 +27,12 @@ public class RoleServiceImpl implements RoleService {
     /**
      * 查询所有正在使用的角色
      *
+     * @param type
      * @return
      */
-    public List<Role> findAllRoles() {
+    public List<Role> findAllRoles(String type) {
         String state = ParameterUtils.ENABLE;
-        return roleDao.findByState(state);
+        return roleDao.findByStateAndType(state, type);
     }
 
     /**

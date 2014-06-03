@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by qlp on 14-5-22.
  */
-public interface RoleDao extends QlpJpaRepository<Role,String> {
+public interface RoleDao extends QlpJpaRepository<Role, String> {
 
-    List<Role> findByState(String state);
+    List<Role> findByStateAndType(String state, String type);
 }
