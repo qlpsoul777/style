@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>用户管理列表</title>
+    <title>用户管理</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${ctx}/static/css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="${ctx}/static/css/font-awesome.css">

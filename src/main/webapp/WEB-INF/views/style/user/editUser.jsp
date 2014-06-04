@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>编辑用户</title>
+    <title>用户管理</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${ctx}/static/css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="${ctx}/static/css/font-awesome.css">
@@ -171,6 +171,7 @@
                                         </label>
                                     </c:forEach>
                                     <input type="hidden" id="roleIds" name="roleIds"/>
+                                    <input type="hidden" id="type" name="type" value="${type}"/>
                                 </div>
                             </div>
                         </td>

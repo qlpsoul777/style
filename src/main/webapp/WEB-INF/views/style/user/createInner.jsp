@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>新增用户</title>
+    <title>用户管理</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${ctx}/static/css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="${ctx}/static/css/font-awesome.css">
@@ -27,7 +27,6 @@
                 ids = ids.substring(0, ids.length - 1);
             }
             $('#roleIds').val(ids);
-            alert(ids);
         }
     </script>
 </head>
