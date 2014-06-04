@@ -23,7 +23,8 @@ public class Role extends TopEntity {
     private String description;  //角色描述
 
     private List<User> members = new ArrayList<User>();  //角色下的用户
-    private List<Application> apps = new ArrayList<Application>();  //角色拥有的应用
+    private List<Application> apps = new ArrayList<Application>();  //角色拥有的应用模块
+    private List<Functions> funcs = new ArrayList<Functions>();  //角色拥有的功能
 
     public String getType() {
         return type;
@@ -84,5 +85,17 @@ public class Role extends TopEntity {
 
     public void setApps(List<Application> apps) {
         this.apps = apps;
+    }
+
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, targetEntity = Functions.class)
+    @JoinTable(name = "com_qlp_style_role_func", joinColumns = {@JoinColumn(name = "role_id")}, inverseJoinColumns = {@JoinColumn(name = "func_id")})
+    @Fetch(FetchMode.SUBSELECT)
+    @OrderBy("id")
+    public List<Functions> getFuncs() {
+        return funcs;
+    }
+
+    public void setFuncs(List<Functions> funcs) {
+        this.funcs = funcs;
     }
 }

@@ -1,8 +1,12 @@
 package com.qlp.user.entity;
 
 import com.qlp.utils.ParameterUtils;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by qlp on 14-5-19.
@@ -20,6 +24,8 @@ public class Functions {
     private Integer sort;  //排序字段
 
     private Application application;  //关联模块
+
+    private List<Role> roles = new ArrayList<Role>();  //关联角色
 
     @Id
     public String getId() {
@@ -78,5 +84,16 @@ public class Functions {
 
     public void setApplication(Application application) {
         this.application = application;
+    }
+
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "funcs")
+    @Fetch(FetchMode.SUBSELECT)
+    @OrderBy("sort")
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }
