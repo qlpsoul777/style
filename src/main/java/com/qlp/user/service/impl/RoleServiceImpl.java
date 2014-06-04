@@ -7,7 +7,9 @@ import com.qlp.utils.ParameterUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +53,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     public Page<Role> findPageByMap(Map<String, Object> map, Pageable pageable) {
-        return roleDao.queryPageByMap(map, pageable);
+        int pageNum = pageable.getPageNumber();
+        int pageSize = pageable.getPageSize();
+        Sort sort = new Sort(Sort.Direction.DESC, "createTime");
+        PageRequest pageRequest = new PageRequest(pageNum, pageSize, sort);
+        return roleDao.queryPageByMap(map, pageRequest);
     }
 
     /**

@@ -1,6 +1,13 @@
 package com.qlp.user.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.qlp.user.dto.Application_;
+import com.qlp.user.dto.Functions_;
+import com.qlp.user.entity.Application;
+import com.qlp.user.entity.Functions;
 import com.qlp.user.entity.Role;
+import com.qlp.user.service.ApplicationService;
 import com.qlp.user.service.RoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +33,12 @@ import java.util.Map;
 @RequestMapping(value = "role/")
 public class RoleController {
     private RoleService roleService;
+    private ApplicationService applicationService;
+
+    @Autowired
+    public void setApplicationService(ApplicationService applicationService) {
+        this.applicationService = applicationService;
+    }
 
     @Autowired
     public void setRoleService(RoleService roleService) {
@@ -68,5 +83,39 @@ public class RoleController {
         String ids = request.getParameter("ids");
         roleService.batchUse(ids);
         return "redirect:/role/roleList";
+    }
+
+    /**
+     * 新增角色
+     *
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "create", method = RequestMethod.GET)
+    public String create(HttpServletRequest request, Model model) {
+        Map<String, List<Functions_>> map = new HashMap<String, List<Functions_>>();
+        List<Application> apps = applicationService.findAllByVisiable();
+        for (Application app : apps) {
+            List<Functions> funcs = app.getFuncs();
+            List<Functions_> funcs_ = new ArrayList<Functions_>();
+            if (!funcs.isEmpty()) {
+                for (Functions f : funcs) {
+                    Functions_ f_ = new Functions_();
+                    f_.setfId(f.getId());
+                    f_.setfName(f.getName());
+                    funcs_.add(f_);
+                }
+                map.put(app.getName(), funcs_);
+            }
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonObj = objectMapper.writeValueAsString(map);
+            model.addAttribute("jsonObj", jsonObj);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return "/style/role/create";
     }
 }

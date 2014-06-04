@@ -16,4 +16,13 @@ public interface ApplicationService {
      * @return
      */
     List<Application> findApplicationByUser(String userId);
+
+    /**
+     * 查询所有可见的模块
+     *
+     * @return
+     */
+    List<Application> findAllByVisiable();
+
+    Application get(String id);
 }

@@ -3,6 +3,7 @@ package com.qlp.user.service.impl;
 import com.qlp.user.dao.ApplicationDao;
 import com.qlp.user.entity.Application;
 import com.qlp.user.service.ApplicationService;
+import com.qlp.utils.ParameterUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,5 +41,19 @@ public class ApplicationServiceImpl implements ApplicationService {
             logger.debug("List<Application> findApplicationByUser(String userId)方法传入的参数为blank");
         }
         return apps;
+    }
+
+    /**
+     * 查询所有可见的模块
+     *
+     * @return
+     */
+    public List<Application> findAllByVisiable() {
+        String visiable = ParameterUtils.ENABLE;
+        return applicationDao.findByVisiable(visiable);
+    }
+
+    public Application get(String id) {
+        return applicationDao.findOne(id);
     }
 }
