@@ -149,7 +149,7 @@ public class QlpJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
         Iterator it;
         if (sort != null) {
             for (it = sort.iterator(); it.hasNext(); ) {
-                Sort.Order order = (Sort.Order) sort.iterator();
+                Sort.Order order = (Sort.Order) it.next();
                 if (order.getDirection().equals(Sort.Direction.ASC)) {
                     criteria.addOrder(Order.asc(order.getProperty()));
                 } else {
