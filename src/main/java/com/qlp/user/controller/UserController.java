@@ -153,14 +153,7 @@ public class UserController {
     public String saveInner(HttpServletRequest request) {
         String loginName = request.getParameter("loginName");
         String roleIds = request.getParameter("roleIds");
-        List<Role> roles = new ArrayList<Role>();
-        if (StringUtils.isNotBlank(roleIds)) {
-            String[] ids = StringUtils.split(roleIds, ',');
-            for (String roleId : ids) {
-                Role r = roleService.get(roleId);
-                roles.add(r);
-            }
-        }
+        List<Role> roles = roleService.findByIds(roleIds);
         String state = request.getParameter("state");
         String type = ParameterUtils.INNER;
         String password = ParameterUtils.INITPASSWORD;
@@ -235,24 +228,15 @@ public class UserController {
         String type = request.getParameter("type");
         String id = request.getParameter("id");
         String newIds = request.getParameter("roleIds"); //修改后的角色id
-        List<Role> newRoles = new ArrayList<Role>();
-        if (StringUtils.isNotBlank(newIds)) {
-            String[] ids = StringUtils.split(newIds, ',');
-            for (String rId : ids) {
-                Role r = roleService.get(rId);
-                newRoles.add(r);
-            }
-        }
+        List<Role> newRoles = roleService.findByIds(newIds);
         String state = request.getParameter("state");
         User user = userService.get(id);
         List<Role> oldRoles = user.getRoles();  //修改前的角色
-        // newRoles.removeAll(oldRoles);  //需add的role
-        oldRoles.retainAll(newRoles);  //需delete的role
-        for (Role a : oldRoles) {
-            System.out.println(a.getName() + ",");
-        }
-//        user.setState(state);
-//        userService.save(user);
+        oldRoles.removeAll(oldRoles);
+        oldRoles.addAll(newRoles);
+        user.setRoles(oldRoles);
+        user.setState(state);
+        userService.save(user);
         return "redirect:/user/index/list/" + type;
     }
 }

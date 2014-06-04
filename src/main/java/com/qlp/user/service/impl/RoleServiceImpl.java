@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -75,5 +76,17 @@ public class RoleServiceImpl implements RoleService {
     @Transactional(readOnly = false)
     public void save(Role role) {
         roleDao.saveAndFlush(role);
+    }
+
+    public List<Role> findByIds(String ids) {
+        List<Role> roles = new ArrayList<Role>();
+        if (StringUtils.isNotBlank(ids)) {
+            String[] roleId = StringUtils.split(ids, ',');
+            for (String id : roleId) {
+                Role r = get(id);
+                roles.add(r);
+            }
+        }
+        return roles;
     }
 }

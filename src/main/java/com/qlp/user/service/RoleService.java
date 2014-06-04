@@ -38,4 +38,6 @@ public interface RoleService {
     void batchUse(String ids);
 
     void save(Role role);
+
+    List<Role> findByIds(String ids);
 }

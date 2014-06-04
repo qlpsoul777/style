@@ -9,7 +9,9 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,7 +89,11 @@ public class UserServiceImpl implements UserService {
                     .add(Restrictions.eq("r.name", roleName))
                     .add(Restrictions.eq("r.state", ParameterUtils.ENABLE));
         }
-        return userDao.queryPageByCriteria(criteria, pageable);
+        int pageSize = pageable.getPageSize();
+        int pageNum = pageable.getPageNumber();
+        Sort sort = new Sort(Sort.Direction.DESC, "createTime");
+        PageRequest pageRequest = new PageRequest(pageNum, pageSize, sort);
+        return userDao.queryPageByCriteria(criteria, pageRequest);
     }
 
     /**
