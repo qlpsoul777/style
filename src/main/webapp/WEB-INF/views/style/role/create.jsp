@@ -20,19 +20,20 @@
         // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
         var setting = {
             showLine: true, //是否显示节点间的连线
-            checkable: true //每个节点上是否显示 CheckBox
+            checkable: true, //每个节点上是否显示 CheckBox
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }
         };
         // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-        var zNodes = [
-            {name: "test1", open: true, children: [
-                {name: "test1_1"},
-                {name: "test1_2"}
-            ]},
-            {name: "test2", open: true, children: [
-                {name: "test2_1"},
-                {name: "test2_2"}
-            ]}
-        ];
+        <%--var zNodes = eval('${jsonObj}');--%>
+        var zNodes =[
+            {id:"1",name:"内容管理",pid:"0",open:true},{id:"11",name:"站点管理",pid:"1"},{id:"12",name:"分类管理",pid:"1"}];
         $(document).ready(function () {
             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         });
