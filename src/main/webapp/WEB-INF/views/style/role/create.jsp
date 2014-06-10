@@ -37,18 +37,29 @@
         $(document).ready(function () {
             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         });
-
+        //获取勾选的节点id
         function sub() {
             var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
             var nodes = treeObj.getCheckedNodes(true);
             var v = "";
             for (var i = 0; i < nodes.length; i++) {
                 v += nodes[i].id + ",";
-                alert(nodes[i].id); //获取选中节点的值
             }
             v = v.substring(0, v.length - 1);
             $('#aid').val(v);
         }
+
+        //控制角色类型
+        $(function () {
+            $('#roleType').on('change', function () {
+                var per = $('#roleType').val();
+                if (per == 'OUTER') {
+                    $('#permission').hide();
+                } else {
+                    $('#permission').show();
+                }
+            });
+        });
     </script>
 </head>
 <body>
@@ -104,7 +115,7 @@
 
                                 <div class="controls">
                                     <select name="roleType" id="roleType">
-                                        <option name="INNER" id="INNER" value="INNER" selected>内部角色</option>
+                                        <option name="INNER" id="INNER" value="INNER" selected="selected">内部角色</option>
                                         <option name="OUTER" id="OUTER" value="OUTER">外部角色</option>
                                     </select>
                                 </div>
@@ -123,8 +134,8 @@
                             </div>
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="2">
+                    <tr id="permission">
+                    <td colspan="2">
                             <div class="control-group">
                                 <label class="control-label">角色权限：</label>
 
