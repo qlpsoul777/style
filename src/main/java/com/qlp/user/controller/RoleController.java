@@ -94,29 +94,58 @@ public class RoleController {
      */
     @RequestMapping(value = "create", method = RequestMethod.GET)
     public String create(HttpServletRequest request, Model model) {
-        Map<String, List<Functions_>> map = new HashMap<String, List<Functions_>>();
+//        Map<String, List<Functions_>> map = new HashMap<String, List<Functions_>>();
+//        List<Application> apps = applicationService.findAllByVisiable();
+//        for (Application app : apps) {
+//            List<Functions> funcs = app.getFuncs();
+//            List<Functions_> funcs_ = new ArrayList<Functions_>();
+//            if (!funcs.isEmpty()) {
+//                for (Functions f : funcs) {
+//                    Functions_ f_ = new Functions_();
+//                    f_.setfId(f.getId());
+//                    f_.setfName(f.getName());
+//                    funcs_.add(f_);
+//                }
+//                map.put(app.getName(), funcs_);
+//            }
+//        }
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            String jsonObj = objectMapper.writeValueAsString(map);
+//            System.out.println(jsonObj);
+//            model.addAttribute("jsonObj", jsonObj);
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+        List<Application_> apps_ = new ArrayList<Application_>();
         List<Application> apps = applicationService.findAllByVisiable();
-        for (Application app : apps) {
+        for(Application app:apps){
+            Application_ a_ = new Application_();
+            a_.setId(app.getId());
+            a_.setName(app.getName());
+            a_.setPid("0");
+            a_.setOpen(Boolean.TRUE);
             List<Functions> funcs = app.getFuncs();
-            List<Functions_> funcs_ = new ArrayList<Functions_>();
             if (!funcs.isEmpty()) {
                 for (Functions f : funcs) {
-                    Functions_ f_ = new Functions_();
-                    f_.setfId(f.getId());
-                    f_.setfName(f.getName());
-                    funcs_.add(f_);
+                    Application_ f_ =new Application_();
+                    f_.setId(f.getId());
+                    f_.setName(f.getName());
+                    f_.setPid(app.getId());
+                    apps_.add(f_);
                 }
-                map.put(app.getName(), funcs_);
+                apps_.add(a_);
             }
         }
         ObjectMapper objectMapper = new ObjectMapper();
+        String jsonObj = null;
         try {
-            String jsonObj = objectMapper.writeValueAsString(map);
-            System.out.println(jsonObj);
-            model.addAttribute("jsonObj", jsonObj);
+            jsonObj = objectMapper.writeValueAsString(apps_);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+        System.out.println(jsonObj);
+        model.addAttribute("jsonObj", jsonObj);
         return "/style/role/create";
     }
 }
