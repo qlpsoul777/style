@@ -5,8 +5,8 @@ package com.qlp.user.dto;
  */
 public class Application_ {
     private String id;
-    private String name;
     private String pid;
+    private String name;
     private Boolean open = Boolean.FALSE;
 
     public String getId() {

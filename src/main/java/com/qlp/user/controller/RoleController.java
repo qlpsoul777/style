@@ -8,6 +8,7 @@ import com.qlp.user.entity.Application;
 import com.qlp.user.entity.Functions;
 import com.qlp.user.entity.Role;
 import com.qlp.user.service.ApplicationService;
+import com.qlp.user.service.FunctionService;
 import com.qlp.user.service.RoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import java.util.Map;
 public class RoleController {
     private RoleService roleService;
     private ApplicationService applicationService;
+    private FunctionService functionService;
 
     @Autowired
     public void setApplicationService(ApplicationService applicationService) {
@@ -43,6 +45,11 @@ public class RoleController {
     @Autowired
     public void setRoleService(RoleService roleService) {
         this.roleService = roleService;
+    }
+
+    @Autowired
+    public void setFunctionService(FunctionService functionService) {
+        this.functionService = functionService;
     }
 
     /**
@@ -87,51 +94,26 @@ public class RoleController {
 
     /**
      * 新增角色
-     *
-     * @param request
      * @param model
      * @return
      */
     @RequestMapping(value = "create", method = RequestMethod.GET)
-    public String create(HttpServletRequest request, Model model) {
-//        Map<String, List<Functions_>> map = new HashMap<String, List<Functions_>>();
-//        List<Application> apps = applicationService.findAllByVisiable();
-//        for (Application app : apps) {
-//            List<Functions> funcs = app.getFuncs();
-//            List<Functions_> funcs_ = new ArrayList<Functions_>();
-//            if (!funcs.isEmpty()) {
-//                for (Functions f : funcs) {
-//                    Functions_ f_ = new Functions_();
-//                    f_.setfId(f.getId());
-//                    f_.setfName(f.getName());
-//                    funcs_.add(f_);
-//                }
-//                map.put(app.getName(), funcs_);
-//            }
-//        }
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        try {
-//            String jsonObj = objectMapper.writeValueAsString(map);
-//            System.out.println(jsonObj);
-//            model.addAttribute("jsonObj", jsonObj);
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
+    public String create(Model model) {
         List<Application_> apps_ = new ArrayList<Application_>();
         List<Application> apps = applicationService.findAllByVisiable();
-        for(Application app:apps){
+        for (Application app : apps) {
             Application_ a_ = new Application_();
             a_.setId(app.getId());
-            a_.setName(app.getName());
             a_.setPid("0");
+            a_.setName(app.getName());
             a_.setOpen(Boolean.TRUE);
             List<Functions> funcs = app.getFuncs();
             if (!funcs.isEmpty()) {
                 for (Functions f : funcs) {
-                    Application_ f_ =new Application_();
+                    Application_ f_ = new Application_();
                     f_.setId(f.getId());
-                    f_.setName(f.getName());
                     f_.setPid(app.getId());
+                    f_.setName(f.getName());
                     apps_.add(f_);
                 }
                 apps_.add(a_);
@@ -147,5 +129,38 @@ public class RoleController {
         System.out.println(jsonObj);
         model.addAttribute("jsonObj", jsonObj);
         return "/style/role/create";
+    }
+
+    @RequestMapping(value = "createSave", method = RequestMethod.POST)
+    public String createSave(HttpServletRequest request) {
+        String roleName = request.getParameter("roleName");
+        String state = request.getParameter("state");
+        String roleType = request.getParameter("roleType");
+        String description = request.getParameter("description");
+        String aid = request.getParameter("aid");
+        List<Application> apps = new ArrayList<>();
+        List<Functions> funcs = new ArrayList<>();
+        if (StringUtils.isNotBlank(aid)) {
+            String[] appId = StringUtils.split(aid, ',');
+            for (String id : appId) {
+                Application a = applicationService.get(id);
+                if (a != null && StringUtils.isNotBlank(a.toString())) {
+                    apps.add(a);
+                }
+                Functions f = functionService.get(id);
+                if (f != null && StringUtils.isNotBlank(f.toString())) {
+                    funcs.add(f);
+                }
+            }
+        }
+        Role r = new Role();
+        r.setName(roleName);
+        r.setState(state);
+        r.setDescription(description);
+        r.setType(roleType);
+        r.setApps(apps);
+        r.setFuncs(funcs);
+        roleService.save(r);
+        return "redirect:/role/roleList";
     }
 }

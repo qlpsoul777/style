@@ -26,17 +26,29 @@
             },
             data: {
                 simpleData: {
-                    enable: true
+                    enable: true,
+                    idKey: "id",
+                    pIdKey: "pid"
                 }
             }
         };
         // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-        <%--var zNodes = eval('${jsonObj}');--%>
-        var zNodes =[
-            {id:"1",name:"内容管理",pid:"0",open:true},{id:"11",name:"站点管理",pid:"1"},{id:"12",name:"分类管理",pid:"1"}];
+        var zNodes = eval('${jsonObj}');
         $(document).ready(function () {
             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         });
+
+        function sub() {
+            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            var nodes = treeObj.getCheckedNodes(true);
+            var v = "";
+            for (var i = 0; i < nodes.length; i++) {
+                v += nodes[i].id + ",";
+                alert(nodes[i].id); //获取选中节点的值
+            }
+            v = v.substring(0, v.length - 1);
+            $('#aid').val(v);
+        }
     </script>
 </head>
 <body>
@@ -48,6 +60,8 @@
                 <h3>新增角色</h3>
             </div>
             <form id="createForm" action="${ctx}/role/createSave" method="post" class="form-horizontal">
+                <input type="hidden" name="aid" id="aid"/>
+
                 <div class="toolbar">
                     <ul>
                         <li>
@@ -63,7 +77,6 @@
                         <td colspan="2">
                             <div class="control-group">
                                 <label class="control-label" for="name">角色名：</label>
-
                                 <div class="controls">
                                     <input id="name" type="text" name="roleName"/>
                                 </div>

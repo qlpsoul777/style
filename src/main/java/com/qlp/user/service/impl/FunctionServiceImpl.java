@@ -41,4 +41,8 @@ public class FunctionServiceImpl implements FunctionService {
         }
         return funcs;
     }
+
+    public Functions get(String id) {
+        return functionsDao.findOne(id);
+    }
 }

@@ -16,4 +16,6 @@ public interface FunctionService {
      * @return
      */
     List<Functions> findFunctionsByUser(String userId);
+
+    Functions get(String id);
 }
