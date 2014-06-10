@@ -112,6 +112,7 @@ public class RoleController {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonObj = objectMapper.writeValueAsString(map);
+            System.out.println(jsonObj);
             model.addAttribute("jsonObj", jsonObj);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
