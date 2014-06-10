@@ -21,6 +21,13 @@
             $('#chk_all').click(function () {
                 $('input[name = "chkName"]').prop('checked', $('#chk_all').prop('checked'));
             });
+
+            $('#queryTable tbody tr').css({'cursor':'pointer'}).on('click', function() {
+                window.location.href = '${ctx}/role/info?id=' + $(this).attr('data-row-id');
+            })
+            $('input[name="chkName"]').parent('td').on('click',function(event){
+                event.stopPropagation();
+            });
             //批量启用/禁用角色
             $('#batchUse').click(function () {
                 var ids = checkSelect();
@@ -103,7 +110,7 @@
                     </thead>
                     <tbody>
                     <c:forEach items="${pageInfo.content}" var="role">
-                        <tr>
+                        <tr data-row-id = "${role.id}">
                             <td><input type="checkbox" name="chkName" value="${role.id}"/></td>
                             <td>${role.name}</td>
                             <td>${role.description}</td>

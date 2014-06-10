@@ -138,8 +138,8 @@ public class RoleController {
         String roleType = request.getParameter("roleType");
         String description = request.getParameter("description");
         String aid = request.getParameter("aid");
-        List<Application> apps = new ArrayList<>();
-        List<Functions> funcs = new ArrayList<>();
+        List<Application> apps = new ArrayList<Application>();
+        List<Functions> funcs = new ArrayList<Functions>();
         if (StringUtils.isNotBlank(aid)) {
             String[] appId = StringUtils.split(aid, ',');
             for (String id : appId) {
@@ -162,5 +162,44 @@ public class RoleController {
         r.setFuncs(funcs);
         roleService.save(r);
         return "redirect:/role/roleList";
+    }
+
+    @RequestMapping(value = "info", method = RequestMethod.GET)
+    public String info(HttpServletRequest request,Model model){
+        String id = request.getParameter("id");
+        Role role = roleService.get(id);
+        model.addAttribute("role",role);
+        List<Application> apps = role.getApps();
+        List<Functions> funcs = role.getFuncs();
+        List<Application_> apps_ = new ArrayList<Application_>();
+        if(!apps.isEmpty()){
+            Application_ a_ = new Application_();
+            for(Application app:apps){
+                a_.setId(app.getId());
+                a_.setPid("0");
+                a_.setName(app.getName());
+                a_.setOpen(Boolean.TRUE);
+                apps_.add(a_);
+            }
+        }
+        if(!funcs.isEmpty()){
+            Application_ a_ = new Application_();
+            for(Functions fun:funcs){
+                a_.setId(fun.getId());
+                a_.setPid(fun.getApplication().getId());
+                a_.setName(fun.getName());
+                apps_.add(a_);
+            }
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonObj = null;
+        try {
+            jsonObj = objectMapper.writeValueAsString(apps_);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(jsonObj);
+        model.addAttribute("jsonObj", jsonObj);
+        return "/style/role/info";
     }
 }
