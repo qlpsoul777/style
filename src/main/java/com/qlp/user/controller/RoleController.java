@@ -139,8 +139,8 @@ public class RoleController {
         String roleType = request.getParameter("roleType");
         String description = request.getParameter("description");
         String aid = request.getParameter("aid");
-        List<Application> apps = new ArrayList<>();
-        List<Functions> funcs = new ArrayList<>();
+        List<Application> apps = new ArrayList<Application>();
+        List<Functions> funcs = new ArrayList<Functions>();
         if (StringUtils.isNotBlank(aid)) {
             String[] appId = StringUtils.split(aid, ',');
             for (String id : appId) {
@@ -175,10 +175,10 @@ public class RoleController {
         List<Application_> apps_ = new ArrayList<Application_>();
         if (!apps.isEmpty()) {
             Application_ a_ = new Application_();
-            for (Application a : apps) {
-                a_.setId(a.getId());
+            for (Application app : apps) {
+                a_.setId(app.getId());
                 a_.setPid("0");
-                a_.setName(a.getName());
+                a_.setName(app.getName());
                 a_.setOpen(Boolean.TRUE);
                 apps_.add(a_);
             }
