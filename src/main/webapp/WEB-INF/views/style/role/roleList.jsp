@@ -36,6 +36,13 @@
                     }
                 }
             });
+
+            $('#queryTable tbody tr').css({'cursor': 'pointer'}).on('click', function () {
+                window.location.href = '${ctx}/role/info?id=' + $(this).attr('data-row-id');
+            })
+            $('input[name="chkName"]').parent('td').on('click', function (event) {
+                event.stopPropagation();
+            });
         });
         //获取复选框的值
         function checkSelect() {
@@ -103,8 +110,8 @@
                     </thead>
                     <tbody>
                     <c:forEach items="${pageInfo.content}" var="role">
-                        <tr>
-                            <td><input type="checkbox" name="chkName" value="${role.id}"/></td>
+                        <tr data-row-id="${role.id}">
+                        <td><input type="checkbox" name="chkName" value="${role.id}"/></td>
                             <td>${role.name}</td>
                             <td>${role.description}</td>
                             <td>

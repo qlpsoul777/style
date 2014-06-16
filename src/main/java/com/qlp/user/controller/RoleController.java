@@ -10,6 +10,7 @@ import com.qlp.user.entity.Role;
 import com.qlp.user.service.ApplicationService;
 import com.qlp.user.service.FunctionService;
 import com.qlp.user.service.RoleService;
+import com.qlp.utils.ParameterUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -162,5 +163,45 @@ public class RoleController {
         r.setFuncs(funcs);
         roleService.save(r);
         return "redirect:/role/roleList";
+    }
+
+    @RequestMapping(value = "info", method = RequestMethod.GET)
+    public String info(HttpServletRequest request, Model model) {
+        String id = request.getParameter("id");
+        Role role = roleService.get(id);
+        model.addAttribute("role", role);
+        List<Application> apps = role.getApps();
+        List<Functions> funcs = role.getFuncs();
+        List<Application_> apps_ = new ArrayList<Application_>();
+        if (!apps.isEmpty()) {
+            Application_ a_ = new Application_();
+            for (Application a : apps) {
+                a_.setId(a.getId());
+                a_.setPid("0");
+                a_.setName(a.getName());
+                a_.setOpen(Boolean.TRUE);
+                apps_.add(a_);
+            }
+        }
+        if (!funcs.isEmpty()) {
+            Application_ f_ = new Application_();
+            for (Functions f : funcs) {
+                f_.setId(f.getId());
+                f_.setPid(f.getApplication().getId());
+                f_.setName(f.getName());
+                f_.setOpen(Boolean.FALSE);
+                apps_.add(f_);
+            }
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonObj = "";
+        try {
+            jsonObj = objectMapper.writeValueAsString(apps_);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(jsonObj);
+        model.addAttribute("jsonObj", jsonObj);
+        return "/style/role/info";
     }
 }
