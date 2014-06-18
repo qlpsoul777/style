@@ -19,12 +19,16 @@
         var zTreeObj;
         // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
         var setting = {
-            data:{
+            showLine: true, //是否显示节点间的连线
+            checkable: true, //每个节点上是否显示 CheckBox
+            check: {
+                enable: true
+            },
+            data: {
                 simpleData: {
                     enable: true,
                     idKey: "id",
-                    pIdKey: "pid",
-                    rootPId: "0"
+                    pIdKey: "pid"
                 }
             }
         };
@@ -33,7 +37,29 @@
         $(document).ready(function () {
             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         });
+        //获取勾选的节点id
+        function sub() {
+            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            var nodes = treeObj.getCheckedNodes(true);
+            var v = "";
+            for (var i = 0; i < nodes.length; i++) {
+                v += nodes[i].id + ",";
+            }
+            v = v.substring(0, v.length - 1);
+            $('#aid').val(v);
+        }
 
+        //控制角色类型
+        $(function () {
+            $('#roleType').on('change', function () {
+                var per = $('#roleType').val();
+                if (per == 'OUTER') {
+                    $('#permission').hide();
+                } else {
+                    $('#permission').show();
+                }
+            });
+        });
     </script>
 </head>
 <body>
@@ -42,18 +68,15 @@
         <div class="span1"></div>
         <div class="span10">
             <div>
-                <h3>角色详情</h3>
+                <h3>修改角色</h3>
             </div>
-            <form id="createForm" action="${ctx}/role/createSave" method="post" class="form-horizontal">
+            <form id="createForm" action="${ctx}/role/updateSave" method="post" class="form-horizontal">
                 <input type="hidden" name="aid" id="aid"/>
 
                 <div class="toolbar">
                     <ul>
                         <li>
-                            <a href="${ctx}/role/create" class="btn btn-success">新增</a>
-                        </li>
-                        <li>
-                            <a href="${ctx}/role/update" class="btn btn-primary">修改</a>
+                            <button class="btn btn-success" type="submit" onclick="sub()">保存</button>
                         </li>
                         <li>
                             <a href="${ctx}/role/roleList" class="btn btn-warning">取消</a>
@@ -64,10 +87,9 @@
                     <tr>
                         <td colspan="2">
                             <div class="control-group">
-                                <label class="control-label">角色名:</label>
-
+                                <label class="control-label" for="name">角色名：</label>
                                 <div class="controls">
-                                    ${role.name}
+                                    <input id="name" type="text" name="roleName" value="${role.name}"/>
                                 </div>
                             </div>
                         </td>
@@ -78,8 +100,12 @@
                                 <label class="control-label">是否启用：</label>
 
                                 <div class="controls">
-                                    <c:if test="${role.state eq 'DISENABLE'}">否</c:if>
-                                    <c:if test="${role.state eq 'ENABLE'}">是</c:if>
+                                    <label class="radio">
+                                        <input type="radio" value="ENABLE" name="state"<c:if test="${role.state eq 'ENABLE'}">checked="checked"</c:if>/>启用
+                                    </label>
+                                    <label class="radio">
+                                        <input type="radio" value="DISENABLE" name="state" <c:if test="${role.state eq 'DISENABLE'}">checked="checked"</c:if>/>不启用
+                                    </label>
                                 </div>
                             </div>
                         </td>
@@ -88,8 +114,10 @@
                                 <label class="control-label">角色类型：</label>
 
                                 <div class="controls">
-                                    <c:if test="${role.type eq 'INNER'}">内部角色</c:if>
-                                    <c:if test="${role.type eq 'OUTER'}">外部角色</c:if>
+                                    <select name="roleType" id="roleType">
+                                        <option name="INNER" id="INNER" value="INNER" selected="selected" >内部角色</option>
+                                        <option name="OUTER" id="OUTER" value="OUTER">外部角色</option>
+                                    </select>
                                 </div>
                             </div>
                         </td>
@@ -97,10 +125,11 @@
                     <tr>
                         <td colspan="2">
                             <div class="control-group">
-                                <label class="control-label">角色描述：</label>
+                                <label class="control-label" for="description">角色描述：</label>
 
                                 <div class="controls">
-                                    ${role.description}
+                                    <textarea id="description" name="description"
+                                              style="width: 750px;height: 150px;resize: none">${role.description}</textarea>
                                 </div>
                             </div>
                         </td>

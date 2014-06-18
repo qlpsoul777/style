@@ -174,8 +174,8 @@ public class RoleController {
         List<Functions> funcs = role.getFuncs();
         List<Application_> apps_ = new ArrayList<Application_>();
         if (!apps.isEmpty()) {
-            Application_ a_ = new Application_();
             for (Application app : apps) {
+                Application_ a_ = new Application_();
                 a_.setId(app.getId());
                 a_.setPid("0");
                 a_.setName(app.getName());
@@ -184,8 +184,8 @@ public class RoleController {
             }
         }
         if (!funcs.isEmpty()) {
-            Application_ f_ = new Application_();
             for (Functions f : funcs) {
+                Application_ f_ = new Application_();
                 f_.setId(f.getId());
                 f_.setPid(f.getApplication().getId());
                 f_.setName(f.getName());
@@ -203,5 +203,42 @@ public class RoleController {
         System.out.println(jsonObj);
         model.addAttribute("jsonObj", jsonObj);
         return "/style/role/info";
+    }
+
+    @RequestMapping(value = "info", method = RequestMethod.GET)
+    public String update(HttpServletRequest request, Model model){
+        List<Application_> apps_ = new ArrayList<Application_>();
+        List<Application> apps = applicationService.findAllByVisiable();
+        for (Application app : apps) {
+            Application_ a_ = new Application_();
+            a_.setId(app.getId());
+            a_.setPid("0");
+            a_.setName(app.getName());
+            a_.setOpen(Boolean.TRUE);
+            List<Functions> funcs = app.getFuncs();
+            if (!funcs.isEmpty()) {
+                for (Functions f : funcs) {
+                    Application_ f_ = new Application_();
+                    f_.setId(f.getId());
+                    f_.setPid(app.getId());
+                    f_.setName(f.getName());
+                    apps_.add(f_);
+                }
+                apps_.add(a_);
+            }
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonObj = null;
+        try {
+            jsonObj = objectMapper.writeValueAsString(apps_);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(jsonObj);
+        model.addAttribute("jsonObj", jsonObj);
+        String id = request.getParameter("id");
+        Role role = roleService.get(id);
+        model.addAttribute("role", role);
+        return "/style/role/edit";
     }
 }
