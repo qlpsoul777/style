@@ -37,6 +37,18 @@
         $(document).ready(function () {
             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         });
+
+        $(function(){
+            var nodes = '${nodes}';
+            var arr = nodes.split(",");
+            for (var i = 0; i < arr.length; i++) {
+                var node = zTreeObj.getNodeByParam("id",arr[i]);
+                if(node){
+                    node.checked = true;
+                    zTreeObj.updateNode(node);
+                }
+            }
+        });
         //获取勾选的节点id
         function sub() {
             var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
@@ -48,18 +60,6 @@
             v = v.substring(0, v.length - 1);
             $('#aid').val(v);
         }
-
-        //控制角色类型
-        $(function () {
-            $('#roleType').on('change', function () {
-                var per = $('#roleType').val();
-                if (per == 'OUTER') {
-                    $('#permission').hide();
-                } else {
-                    $('#permission').show();
-                }
-            });
-        });
     </script>
 </head>
 <body>
@@ -72,7 +72,7 @@
             </div>
             <form id="createForm" action="${ctx}/role/updateSave" method="post" class="form-horizontal">
                 <input type="hidden" name="aid" id="aid"/>
-
+                <input type="hidden" name="id" id="id" value="${role.id}"/>
                 <div class="toolbar">
                     <ul>
                         <li>
@@ -115,8 +115,8 @@
 
                                 <div class="controls">
                                     <select name="roleType" id="roleType">
-                                        <option name="INNER" id="INNER" value="INNER" selected="selected" >内部角色</option>
-                                        <option name="OUTER" id="OUTER" value="OUTER">外部角色</option>
+                                        <option name="INNER" id="INNER" value="INNER"<c:if test="${role.type eq 'INNER'}"> selected="selected"</c:if> disabled="disabled">内部角色</option>
+                                        <option name="OUTER" id="OUTER" value="OUTER" <c:if test="${role.type eq 'OUTER'}"> selected="selected"</c:if> disabled="disabled">外部角色</option>
                                     </select>
                                 </div>
                             </div>

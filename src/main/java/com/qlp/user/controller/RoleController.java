@@ -205,7 +205,7 @@ public class RoleController {
         return "/style/role/info";
     }
 
-    @RequestMapping(value = "info", method = RequestMethod.GET)
+    @RequestMapping(value = "update", method = RequestMethod.GET)
     public String update(HttpServletRequest request, Model model){
         List<Application_> apps_ = new ArrayList<Application_>();
         List<Application> apps = applicationService.findAllByVisiable();
@@ -239,6 +239,60 @@ public class RoleController {
         String id = request.getParameter("id");
         Role role = roleService.get(id);
         model.addAttribute("role", role);
+        String nodes = "";
+        StringBuilder sb = new StringBuilder();
+        List<Application> selectApps = role.getApps();
+        if(!selectApps.isEmpty()){
+            for(Application app :selectApps){
+                sb.append(app.getId()+",");
+            }
+        }
+        List<Functions> selectFuncs = role.getFuncs();
+        if(!selectFuncs.isEmpty()){
+            for(Functions fun: selectFuncs){
+                sb.append(fun.getId()+",");
+            }
+            nodes = sb.substring(0,sb.length()-1);
+        }
+        model.addAttribute("nodes",nodes);
         return "/style/role/edit";
+    }
+
+    @RequestMapping(value = "updateSave", method = RequestMethod.POST)
+    public String updateSave(HttpServletRequest request){
+        String roleName = request.getParameter("roleName");
+        String state = request.getParameter("state");
+        String description = request.getParameter("description");
+        String aid = request.getParameter("aid");  //新的功能
+        List<Application> apps = new ArrayList<Application>();
+        List<Functions> funcs = new ArrayList<Functions>();
+        if (StringUtils.isNotBlank(aid)) {
+            String[] appId = StringUtils.split(aid, ',');
+            for (String id : appId) {
+                Application a = applicationService.get(id);
+                if (a != null && StringUtils.isNotBlank(a.toString())) {
+                    apps.add(a);
+                }
+                Functions f = functionService.get(id);
+                if (f != null && StringUtils.isNotBlank(f.toString())) {
+                    funcs.add(f);
+                }
+            }
+        }
+        String id = request.getParameter("id");
+        Role r = roleService.get(id);
+        List<Application> oldApps = r.getApps();
+        List<Functions> oldFuncs = r.getFuncs();
+        oldApps.removeAll(oldApps);
+        oldApps.addAll(apps);
+        oldFuncs.removeAll(oldFuncs);
+        oldFuncs.addAll(funcs);
+        r.setName(roleName);
+        r.setState(state);
+        r.setDescription(description);
+        r.setApps(oldApps);
+        r.setFuncs(oldFuncs);
+        roleService.save(r);
+        return "redirect:/role/roleList";
     }
 }

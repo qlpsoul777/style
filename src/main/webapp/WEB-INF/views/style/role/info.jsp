@@ -53,7 +53,7 @@
                             <a href="${ctx}/role/create" class="btn btn-success">新增</a>
                         </li>
                         <li>
-                            <a href="${ctx}/role/update" class="btn btn-primary">修改</a>
+                            <a href="${ctx}/role/update?id=${role.id}" class="btn btn-primary">修改</a>
                         </li>
                         <li>
                             <a href="${ctx}/role/roleList" class="btn btn-warning">取消</a>
