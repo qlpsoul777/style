@@ -35,7 +35,7 @@
                         <li><a href="javascript:void(0)" target="_top">退出登录</a></li>
                     </ul>
                 </div>
-                <div class="admin">管理员，您好，今天是2013年2月21日</div>
+                <div class="admin">${user.name}，您好，今天是${currentTime}</div>
             </div>
         </div>
     </div>
@@ -43,66 +43,25 @@
         <div class="span2" style="height: auto">
             <div id="Menu">
                 <ul class="OutMenu">
-                    <li id="one"><a href="javascript:void(0)">基本设置</a>
-                        <ul class="InMenu">
-                            <li><a href="#">二级栏目一</a></li>
-                            <li><a href="#">二级栏目二</a></li>
-                            <li><a href="#">二级栏目三</a></li>
-                        </ul>
-                    </li>
-
-                    <li id="two"><a href="javascript:void(0)">文章管理</a>
-                        <ul class="InMenu">
-                            <li><a href="#">二级栏目一</a></li>
-                            <li><a href="#">二级栏目二</a></li>
-                            <li><a href="#">二级栏目三</a></li>
-                            <li><a href="#">二级栏目一</a></li>
-                            <li><a href="#">二级栏目二</a></li>
-                            <li><a href="#">二级栏目三</a></li>
-                        </ul>
-                    </li>
-
-                    <li id="three"><a href="javascript:void(0)">会员管理</a>
-                        <ul class="InMenu">
-                            <li><a href="#">二级栏目一</a></li>
-                            <li><a href="#">二级栏目二</a></li>
-                            <li><a href="#">二级栏目三</a></li>
-                        </ul>
-                    </li>
-
-                    <li id="four"><a href="javascript:void(0)">订单管理</a>
-                        <ul class="InMenu">
-                            <li><a href="#">二级栏目一</a></li>
-                            <li><a href="#">二级栏目二</a></li>
-                            <li><a href="#">二级栏目一</a></li>
-                            <li><a href="#">二级栏目二</a></li>
-                            <li><a href="#">二级栏目三</a></li>
-                        </ul>
-                    </li>
-
-                    <li id="five"><a href="javascript:void(0)">留言友链</a>
-                        <ul class="InMenu">
-                            <li><a href="#">二级栏目一</a></li>
-                            <li><a href="#">二级栏目二</a></li>
-                            <li><a href="#">二级栏目一</a></li>
-                            <li><a href="#">二级栏目二</a></li>
-                            <li><a href="#">二级栏目三</a></li>
-                        </ul>
-                    </li>
-
-                    <li id="six"><a href="javascript:void(0)">图片广告</a>
-                        <ul class="InMenu">
-                            <li><a href="#">二级栏目一</a></li>
-                            <li><a href="#">二级栏目二</a></li>
-                            <li><a href="#">二级栏目一</a></li>
-                            <li><a href="#">二级栏目二</a></li>
-                            <li><a href="#">二级栏目三</a></li>
-                        </ul>
-                    </li>
+                    <c:forEach items="${apps}" var="app" varStatus="a">
+                        <c:set value="${app.id}" var="aid"></c:set>
+                        <li id="${a.index}">
+                            <a href="javascript:void(0)">${app.name}</a>
+                            <ul class="InMenu">
+                                <c:forEach items="${funMap.get(aid)}" var="func">
+                                    <li><a href="${ctx}/${func.uri}" target="contentFrame">${func.name}</a></li>
+                                </c:forEach>
+                            </ul>
+                        </li>
+                    </c:forEach>
                 </ul>
             </div>
         </div>
         <div class="span10" style="height: auto">
+            <iframe id="contentFrame" name="contentFrame"  src="" frameborder="0" scrolling="auto" width="100%"
+                    height="auto" style="position: absolute; margin: 0px; left: 199px; right: 0px; top: 109px;
+                     bottom: 0px; height: 533px; width: 1167px; z-index: 0; display:
+                      block; visibility: visible; padding-left:0px; background-color:#FFFFFF"></iframe>
             <!--位置及导航-->
            <%-- <div id="NavBox">
                 <div class="location">当前位置：古风后台管理系统 >>> 首页</div>

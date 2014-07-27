@@ -10,6 +10,7 @@ import com.qlp.user.service.RoleService;
 import com.qlp.user.service.UserService;
 import com.qlp.utils.ParameterUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -82,13 +83,23 @@ public class UserController {
         if (user != null) {
             if (StringUtils.equals(user.getState(), ParameterUtils.ENABLE)) {
                 List<Application> apps = applicationService.findApplicationByUser(user.getId());
-                List<Functions> funcs = functionService.findFunctionsByUser(user.getId());
-                model.addAttribute("funcs", funcs);
+                if(!apps.isEmpty()){
+                    Map<String,List<Functions>> funMap = new HashMap<String, List<Functions>>();
+                    for(Application app : apps){
+                        String appId = app.getId();
+                        List<Functions> funcs = functionService.findFunctionsByUser(user.getId(),appId);
+                        if(!funcs.isEmpty()){
+                            funMap.put(appId,funcs);
+                        }
+                    }
+                    model.addAttribute("funMap", funMap);
+                }
+                DateTime dt = new DateTime();
+                model.addAttribute("currentTime", dt.toString("yyyy年MM月dd日"));
                 model.addAttribute("apps", apps);
                 model.addAttribute("user", user);
-//                path = "/style/user/hello";
-//                path = "/style/upload/test";
-                path = "/style/system/backstage/index";
+                path = "/style/upload/test";
+//                path = "/style/system/backstage/index";
             } else {
                 errorMessage = "账户已禁用，如有疑问请联系管理员";
             }

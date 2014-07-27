@@ -7,10 +7,10 @@ $(document).ready(function() {
 				Menu_In = $('.OutMenu li .InMenu');
 			Menu_Out.first().addClass('active').next().slideDown('normal');
 			Menu_Out.on('click', function(event) {
-				event.preventDefault();
+//				event.preventDefault();
 				if ($(this).attr('class') != 'active'){
-					Menu_In.slideUp('normal');
-					$(this).next().stop(true,true).slideToggle('normal');
+//					Menu_In.slideUp('normal');
+					$(this).next().slideToggle('normal');
 					Menu_Out.removeClass('active');
 					$(this).addClass('active');
 				}

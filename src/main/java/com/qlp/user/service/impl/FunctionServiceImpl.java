@@ -32,12 +32,12 @@ public class FunctionServiceImpl implements FunctionService {
      * @param userId
      * @return
      */
-    public List<Functions> findFunctionsByUser(String userId) {
+    public List<Functions> findFunctionsByUser(String userId,String appId) {
         List<Functions> funcs = null;
         if (StringUtils.isNotBlank(userId)) {
-            funcs = functionsDao.findFunctionByUser(userId);
+            funcs = functionsDao.findFunctionByUser(userId,appId);
         } else {
-            logger.debug("List<Functions> findFunctionsByUser(String userId)的传入参数为blank");
+            logger.debug("List<Functions> findFunctionsByUser(String userId,String appId)的传入参数为blank");
         }
         return funcs;
     }

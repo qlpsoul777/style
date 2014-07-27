@@ -18,7 +18,7 @@ public interface FunctionsDao extends QlpJpaRepository<Functions, String> {
      * @return
      */
     @Query("select f from Functions f join f.application a join a.roles r"
-            + " join r.members u where r.state = 'ENABLE' and u.id = ?1"
+            + " join r.members u where r.state = 'ENABLE'and a.id = ?2 and u.id = ?1"
             + " order by f.sort")
-    List<Functions> findFunctionByUser(String userId);
+    List<Functions> findFunctionByUser(String userId,String appId);
 }

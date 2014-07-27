@@ -15,7 +15,7 @@ public interface FunctionService {
      * @param userId
      * @return
      */
-    List<Functions> findFunctionsByUser(String userId);
+    List<Functions> findFunctionsByUser(String userId,String appId);
 
     Functions get(String id);
 }
