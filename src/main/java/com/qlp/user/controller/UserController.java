@@ -86,7 +86,9 @@ public class UserController {
                 model.addAttribute("funcs", funcs);
                 model.addAttribute("apps", apps);
                 model.addAttribute("user", user);
-                path = "/style/user/hello";
+//                path = "/style/user/hello";
+//                path = "/style/upload/test";
+                path = "/style/system/backstage/index";
             } else {
                 errorMessage = "账户已禁用，如有疑问请联系管理员";
             }
