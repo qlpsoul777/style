@@ -7,3 +7,4 @@ style
 1、对spring data jpa做二次封装生成公共Dao。
 2、自定义jsp标签。
 3、树插件zTree的运用。
+4、异步上传插件uploadify的运用。
