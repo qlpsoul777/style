@@ -1,5 +1,7 @@
 package com.qlp.cms.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qlp.cms.dto.Version_;
 import com.qlp.cms.entity.Version;
 import com.qlp.cms.service.VersionService;
@@ -12,23 +14,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by qlp on 2014/7/23.
- * 附件上传
+ * 附件上传、下载、删除
  */
 @Controller
 @RequestMapping("/cms/version")
@@ -50,9 +52,21 @@ public class VersionController {
             Version version = createAndSaveVersion(multipartFile, uploadPath);
             Version_ v = new Version_();
             v.setId(version.getId());
-
+            v.setName(version.getName());
+            v.setType(version.getType());
+            v.setSize(version.getSize());
+            v.setUrl(version.getPath());
+            vList.add(v);
         }
-        return "";
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonObj = "";
+        try {
+            jsonObj = objectMapper.writeValueAsString(vList);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(jsonObj);
+        return jsonObj;
     }
 
     private Version createAndSaveVersion(MultipartFile file, String uploadPath) {
@@ -96,4 +110,33 @@ public class VersionController {
         }
         return null;
     }
+
+    @RequestMapping(value = "delete/{id}")
+    @ResponseBody
+    public String delete(@PathVariable String id){
+        String status = "";
+        try{
+            versionService.delete(id);
+            status = "success";
+        } catch (Exception e){
+            status = "error";
+        }
+        return status;
+    }
+
+    @RequestMapping(value = "/download/{id}")
+    public void download(@PathVariable String id, HttpServletRequest request, HttpServletResponse response){
+        Version version = versionService.get(id);
+        if(version == null){
+            logger.error("下载文件不存在",id);
+        }
+        try {
+            FileInputStream fis = new FileInputStream(version.getPath());
+            IOUtils.copy(fis,response.getOutputStream());
+        } catch (Exception e) {
+            logger.error("下载文件{}错误，文件实际保存路径{}不存在", version.getName(), version.getPath());
+            e.printStackTrace();
+        }
+    }
+
 }

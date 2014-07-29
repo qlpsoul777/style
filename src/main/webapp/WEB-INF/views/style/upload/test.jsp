@@ -38,9 +38,15 @@
                 //上传文件页面中，你想要用来作为文件队列的元素的id, 默认为false  自动生成,  不带#
                 //'queueID': 'fileQueue',
                 //选择文件后自动上传
-                'auto': false,
+                'auto': true,
                 //设置为true将允许多文件上传
-                'multi': true
+                'multi': true,
+                'onUploadSuccess':function(file,data,response){
+//                    var versionsArray = [];
+//                    versionsArray.push(data.id);
+//                    var ids = versionsArray.join(",");
+                    alert(data.id);
+                }
             });
         });
 

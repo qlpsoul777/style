@@ -7,7 +7,7 @@ public class Version_ {
 
     private String id;
     private String name;
-    private String size;
+    private long size;
     private String type;
     private String url;
 
@@ -27,11 +27,11 @@ public class Version_ {
         this.name = name;
     }
 
-    public String getSize() {
+    public long getSize() {
         return size;
     }
 
-    public void setSize(String size) {
+    public void setSize(long size) {
         this.size = size;
     }
 
