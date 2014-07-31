@@ -2,6 +2,7 @@
          pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <c:set var="locale" value="${pageContext.request.locale}"/>
 <!DOCTYPE html>
@@ -14,10 +15,11 @@
     <link rel="stylesheet" href="${ctx}/static/js/uploadify/uploadify.css">
 
     <script src="${ctx}/static/js/jquery.js"></script>
-    <script src="${ctx}/static/js/uploadify/jquery.uploadify.js"></script>
     <script src="${ctx}/static/js/bootstrap.js"></script>
+    <script src="${ctx}/static/js/uploadify/jquery.uploadify.js"></script>
     <script type="text/javascript">
         $(function () {
+            var oldVersionIds = [];
             $("#uploadify").uploadify({
                 //指定swf文件
                 'swf': '${ctx}/static/js/uploadify/uploadify.swf',
@@ -42,28 +44,63 @@
                 //设置为true将允许多文件上传
                 'multi': true,
                 'onUploadSuccess':function(file,data,response){
-//                    var versionsArray = [];
-//                    versionsArray.push(data.id);
-//                    var ids = versionsArray.join(",");
-                    alert(data.id);
+                    var str = '{files:'+data+'}';
+                    var jsonObj = eval('(' + str + ')');
+                    var ids = jsonObj.files[0].id;
+                    oldVersionIds.push(ids);
+                    $('#fileTable').show();
+                    $('#fileOperate').append('<tr id="'+jsonObj.files[0].id+'"><td>'+jsonObj.files[0].name+'</td><td>'
+                            +jsonObj.files[0].size+'B</td>'
+                    +'<td><a class="btn btn-danger" onclick="deleteFile(\'' + jsonObj.files[0].id
+                            + '\')">删除</a></td></tr>');
+                },
+                'onQueueComplete':function(status){
+                    $('#versionIds').val(oldVersionIds.join(","));
                 }
             });
         });
-
+        function deleteFile(id){
+            $.ajax("${ctx}/cms/version/delete/"+id,function(data){
+                alert(data);
+//                if(data == "success"){
+//                     alert("11111");
+//                   var trCount= $("#fileOperate").find("tr").length;
+//                   alert(trCount);
+//                  if(trCount == 0){
+//                        $('#fileTable').hide();
+//                   }
+//                }else{
+//                    alert("删除文件失败");
+//                }
+            });
+        }
     </script>
 </head>
 <body>
 <div class="container-fluid">
     <div class="row-fluid">
-        <form action="/user/index/first" method="post" enctype="multipart/form-data">
-            <div id="fileQueue">
-            </div>
-            <input type="file" name="uploadify" id="uploadify" />
-            <p>
-                <a href="javascript:$('#uploadify').uploadify('upload')">上传</a>|
-                <a href="javascript:$('#uploadify').uploadify('cancel')">取消上传</a>
-            </p>
-        </form>
+       <%-- <form:form action="" modelAttribute="" method="post">
+            <form:hidden path="id"/>
+            <input type="hidden" id="versionIds" name="versionIds"/>
+        </form:form>--%>
+                <div id="fileQueue">
+                </div>
+                <input type="file" name="uploadify" id="uploadify" />
+                <p >
+                    <a href="javascript:$('#uploadify').uploadify('upload')">上传</a>|
+                    <a href="javascript:$('#uploadify').uploadify('cancel')">取消上传</a>
+                </p>
+                <div id="fileTable" style="display: none">
+                    <table class="table" width="60%">
+                        <thead>
+                          <th>文件名</th>
+                          <th>大小</th>
+                          <th>操作</th>
+                        </thead >
+                        <tbody id="fileOperate">
+                        </tbody>
+                    </table>
+                </div>
     </div>
 </div>
 </body>
