@@ -32,4 +32,23 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    <tag>
+        <description>截取指定长度的HTML代码</description>
+        <name>htmlSplit</name>
+        <tag-class>com.qlp.commons.tags.HtmlSplitTag</tag-class>
+        <body-content>JSP</body-content>
+
+        <attribute>
+            <description>要截取的字符串</description>
+            <name>htmlStr</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>要截取的字符串的长度</description>
+            <name>length</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
 </taglib>

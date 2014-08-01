@@ -60,18 +60,17 @@
             });
         });
         function deleteFile(id){
-            $.ajax("${ctx}/cms/version/delete/"+id,function(data){
-                alert(data);
-//                if(data == "success"){
-//                     alert("11111");
-//                   var trCount= $("#fileOperate").find("tr").length;
-//                   alert(trCount);
-//                  if(trCount == 0){
-//                        $('#fileTable').hide();
-//                   }
-//                }else{
-//                    alert("删除文件失败");
-//                }
+            $.get("${ctx}/cms/version/delete/"+id,function(data){
+                if(data == "success"){
+                   $('#'+id).remove();
+                   var trCount= $("#fileOperate").find("tr").length;
+                   alert(trCount);
+                  if(trCount == 0){
+                        $('#fileTable').hide();
+                   }
+                }else{
+                    alert("删除文件失败");
+                }
             });
         }
     </script>

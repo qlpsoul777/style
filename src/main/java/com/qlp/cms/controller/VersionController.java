@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class VersionController {
     public String fileUpload(MultipartHttpServletRequest request){
         String uploadPath = request.getSession().getServletContext().getInitParameter("uploadPath");
         Iterator<?> iterator = request.getFileNames();
-        List<Version_> vList = new ArrayList<Version_>();
+        List<Version_> vList = new ArrayList<>();
         while (iterator.hasNext()){
             MultipartFile multipartFile = request.getFile((String) iterator.next());
             Version version = createAndSaveVersion(multipartFile, uploadPath);
@@ -114,7 +113,7 @@ public class VersionController {
     @RequestMapping(value = "delete/{id}")
     @ResponseBody
     public String delete(@PathVariable String id){
-        String status = "";
+        String status;
         try{
             versionService.delete(id);
             status = "success";
@@ -125,17 +124,26 @@ public class VersionController {
     }
 
     @RequestMapping(value = "/download/{id}")
-    public void download(@PathVariable String id, HttpServletRequest request, HttpServletResponse response){
+    public void download(@PathVariable String id, HttpServletResponse response){
         Version version = versionService.get(id);
         if(version == null){
             logger.error("下载文件不存在",id);
         }
+        FileInputStream fis = null;
         try {
-            FileInputStream fis = new FileInputStream(version.getPath());
+            fis = new FileInputStream(version.getPath());
             IOUtils.copy(fis,response.getOutputStream());
         } catch (Exception e) {
-            logger.error("下载文件{}错误，文件实际保存路径{}不存在", version.getName(), version.getPath());
+            logger.error("下载文件{}错误，文件实际保存路径{}不存在");
             e.printStackTrace();
+        }finally {
+            if(fis != null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

@@ -98,8 +98,8 @@ public class UserController {
                 model.addAttribute("currentTime", dt.toString("yyyy年MM月dd日"));
                 model.addAttribute("apps", apps);
                 model.addAttribute("user", user);
-                path = "/style/upload/test";
-//                path = "/style/system/backstage/index";
+//                path = "/style/upload/test";
+                path = "/style/system/backstage/index";
             } else {
                 errorMessage = "账户已禁用，如有疑问请联系管理员";
             }

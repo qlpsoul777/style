@@ -9,6 +9,9 @@ public class ParameterUtils {
     public static final String ENABLE = "ENABLE";//启用
     public static final String DISENABLE = "DISENABLE";//禁用
 
+    public static final String NO = "0";//表示否定/无
+    public static final String YES = "1";//表示存在/有
+
     public static final String INNER = "INNER";//内部用户
     public static final String OUTER = "OUTER";//外部用户
 

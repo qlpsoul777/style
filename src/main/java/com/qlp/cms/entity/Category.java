@@ -23,6 +23,7 @@ public class Category extends TopEntity {
     private String author;  //创建人
 
     private Category parentCategory;  //父栏目
+    private Site site;  //所属站点
     private List<Category> childCategory;  //子栏目
 
     public String getName() {
@@ -71,6 +72,16 @@ public class Category extends TopEntity {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "site_id")
+    public Site getSite() {
+        return site;
+    }
+
+    public void setSite(Site site) {
+        this.site = site;
     }
 
     @ManyToOne
