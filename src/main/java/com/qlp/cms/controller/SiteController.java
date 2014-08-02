@@ -49,7 +49,7 @@ public class SiteController {
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String list(@PageableDefaults(10) Pageable pageable,Model model){
-        Map<String,Object> map = new HashMap<>();
+        Map<String,Object> map = new HashMap<String,Object>();
         Sort sort = new Sort(Sort.Direction.DESC,"createTime");
         PageRequest pr = new PageRequest(pageable.getPageNumber(),pageable.getPageSize(),sort);
         Page<Site> pageInfo =  siteService.findPageByMap(map,pr);

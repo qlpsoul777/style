@@ -45,7 +45,7 @@ public class VersionController {
     public String fileUpload(MultipartHttpServletRequest request){
         String uploadPath = request.getSession().getServletContext().getInitParameter("uploadPath");
         Iterator<?> iterator = request.getFileNames();
-        List<Version_> vList = new ArrayList<>();
+        List<Version_> vList = new ArrayList<Version_>();
         while (iterator.hasNext()){
             MultipartFile multipartFile = request.getFile((String) iterator.next());
             Version version = createAndSaveVersion(multipartFile, uploadPath);

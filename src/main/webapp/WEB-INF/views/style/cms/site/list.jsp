@@ -62,11 +62,11 @@
                                 </c:if>
                             </td>
                             <td>
-                            <qlp:htmlSplit htmlStr="${site.description}" length="25"/>
+                            <qlp:htmlSplit htmlStr="${site.description}" length="15"/>
                             </td>
                             <td>
-                                <a href="${ctx}/cms/site/edit?id=${site.id}">修改</a>
-                                <a href="${ctx}/cms/site/delete?id=${site.id}">
+                                <a href="${ctx}/cms/site/edit?id=${site.id}" class="btn btn-warning">修改</a>
+                                <a href="${ctx}/cms/site/delete?id=${site.id}" class="btn btn-primary">
                                     <c:if test="${site.visiable eq '0'}">
                                         启用
                                     </c:if>

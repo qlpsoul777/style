@@ -2,10 +2,15 @@ package com.qlp.cms.entity;
 
 import com.qlp.commons.entity.TopEntity;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 /**
  * 站点管理
  * Created by admin on 2014/8/1.
  */
+@Entity
+@Table(name = "t_style_cms_site")
 public class Site extends TopEntity {
     private String cName;  //站点名称
     private String eName;  //英文名称

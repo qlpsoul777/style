@@ -12,9 +12,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${ctx}/static/css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="${ctx}/static/css/qlp.css">
+    <style type="text/css" rel="stylesheet">
+        .error{
+            color: red;
+        }
+    </style>
     <script src="${ctx}/static/js/jquery.js"></script>
     <script src="${ctx}/static/js/bootstrap.js"></script>
+    <script src="${ctx}/static/js/validation/jquery.validate.js"></script>
     <script type="text/javascript">
+        $(function(){
+            $("#editForm").validate({
+                errorElement:"em",
+                rules: {
+                    cName: "required",
+                    path: {
+                        required: true,
+                        url: true
+                    },
+                    domianName: "required"
+                },
+                messages: {
+                    cName: "不能为空",
+                    path: {
+                        required: "不能为空",
+                        url: "请输入合法的网址"
+                    },
+                    domianName: "不能为空"
+                }
+            });
+        })
     </script>
 </head>
 <body>
@@ -41,7 +68,7 @@
                 <tr>
                     <td>
                         <div class="control-group">
-                            <label class="control-label" for="cName">站点中文名：</label>
+                            <%--@declare id="cname"--%><label class="control-label" for="cName">站点中文名：</label>
                             <div class="controls">
                                 <form:input path="cName"/>
                             </div>
@@ -51,7 +78,7 @@
                 <tr>
                     <td>
                         <div class="control-group">
-                            <label class="control-label" for="eName">站点英文名：</label>
+                            <%--@declare id="ename"--%><label class="control-label" for="eName">站点英文名：</label>
                             <div class="controls">
                                 <form:input path="eName"/>
                             </div>
@@ -61,9 +88,9 @@
                 <tr>
                     <td>
                         <div class="control-group">
-                            <label class="control-label" for="eName">站点英文名：</label>
+                            <%--@declare id="simplename"--%><label class="control-label" for="simpleName">站点简称：</label>
                             <div class="controls">
-                                <form:input path="eName"/>
+                                <form:input path="simpleName"/>
                             </div>
                         </div>
                     </td>
@@ -71,9 +98,9 @@
                 <tr>
                     <td>
                         <div class="control-group">
-                            <label class="control-label" for="eName">站点英文名：</label>
+                            <%--@declare id="domianname"--%><label class="control-label" for="domianName">域名：</label>
                             <div class="controls">
-                                <form:input path="eName"/>
+                                <form:input path="domianName"/>
                             </div>
                         </div>
                     </td>
@@ -81,19 +108,9 @@
                 <tr>
                     <td>
                         <div class="control-group">
-                            <label class="control-label" for="eName">站点英文名：</label>
+                            <%--@declare id="path"--%><label class="control-label" for="path">访问路径：</label>
                             <div class="controls">
-                                <form:input path="eName"/>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="control-group">
-                            <label class="control-label" for="eName">站点英文名：</label>
-                            <div class="controls">
-                                <form:input path="eName"/>
+                                <form:input path="path"/>
                             </div>
                         </div>
                     </td>
@@ -101,93 +118,15 @@
                 <tr>
                     <td colspan="2">
                         <div class="control-group">
-                            <label class="control-label" for="description">角色描述：</label>
+                            <%--@declare id="description"--%><label class="control-label" for="description">站点简介：</label>
 
                             <div class="controls">
-                                <textarea id="description" name="description"
-                                          style="width: 750px;height: 150px;resize: none">${role.description}</textarea>
+                                <form:textarea path="description" style="width: 750px;height: 150px;resize: none"/>
                             </div>
                         </div>
                     </td>
                 </tr>
             </form:form>
-            <form id="createForm" action="${ctx}/role/updateSave" method="post" class="form-horizontal">
-                <input type="hidden" name="aid" id="aid"/>
-                <input type="hidden" name="id" id="id" value="${role.id}"/>
-                <div class="toolbar">
-                    <ul>
-                        <li>
-                            <button class="btn btn-success" type="submit" onclick="sub()">保存</button>
-                        </li>
-                        <li>
-                            <a href="${ctx}/role/roleList" class="btn btn-warning">取消</a>
-                        </li>
-                    </ul>
-                </div>
-                <table class="table">
-                    <tr>
-                        <td colspan="2">
-                            <div class="control-group">
-                                <label class="control-label" for="name">角色名：</label>
-                                <div class="controls">
-                                    <input id="name" type="text" name="roleName" value="${role.name}"/>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="control-group">
-                                <label class="control-label">是否启用：</label>
-
-                                <div class="controls">
-                                    <label class="radio">
-                                        <input type="radio" value="ENABLE" name="state"<c:if test="${role.state eq 'ENABLE'}">checked="checked"</c:if>/>启用
-                                    </label>
-                                    <label class="radio">
-                                        <input type="radio" value="DISENABLE" name="state" <c:if test="${role.state eq 'DISENABLE'}">checked="checked"</c:if>/>不启用
-                                    </label>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="control-group">
-                                <label class="control-label">角色类型：</label>
-
-                                <div class="controls">
-                                    <select name="roleType" id="roleType">
-                                        <option name="INNER" id="INNER" value="INNER"<c:if test="${role.type eq 'INNER'}"> selected="selected"</c:if> disabled="disabled">内部角色</option>
-                                        <option name="OUTER" id="OUTER" value="OUTER" <c:if test="${role.type eq 'OUTER'}"> selected="selected"</c:if> disabled="disabled">外部角色</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <div class="control-group">
-                                <label class="control-label" for="description">角色描述：</label>
-
-                                <div class="controls">
-                                    <textarea id="description" name="description"
-                                              style="width: 750px;height: 150px;resize: none">${role.description}</textarea>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr id="permission">
-                        <td colspan="2">
-                            <div class="control-group">
-                                <label class="control-label">角色权限：</label>
-
-                                <div class="controls">
-                                    <ul id="treeDemo" class="ztree"></ul>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </form>
         </div>
         <div class="span1"></div>
     </div>
