@@ -4,6 +4,8 @@ import com.qlp.cms.entity.Category;
 import com.qlp.cms.entity.Site;
 import com.qlp.cms.service.CategoryService;
 import com.qlp.cms.service.SiteService;
+import com.qlp.commons.entity.TreeNode;
+import com.qlp.utils.JsonMapper;
 import com.qlp.utils.ParameterUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,7 +69,9 @@ public class CategoryController {
     @RequestMapping(value = "look", method = RequestMethod.GET)
     public String look(HttpServletRequest request,Model model){
         String siteId = request.getParameter("siteId");
-
+        List<TreeNode> nodes = categoryService.findAllCategory(siteId);
+        String s = JsonMapper.nonDefaultMapper().toJson(nodes);
+        System.out.print(s);
         return "/style/cms/category/categoryList";
     }
 
