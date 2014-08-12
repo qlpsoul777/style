@@ -92,15 +92,38 @@
             $('#categoryFrame').attr('src','${ctx}/cms/category/childrenList?currentNodeId='+currentNodeId+'&allFlag='+allFlag
             );
         }
+        //新增下级栏目
+        function addChild(){
+            hideRMenu();
+            var nodes = zTree.getSelectedNodes();
+            var pid = nodes[0].id;
+            $('#categoryFrame').attr('src','${ctx}/cms/category/create?nodeId='+pid);
+        }
         //新增同级栏目
         function addBrother(){
             hideRMenu();
             var nodes = zTree.getSelectedNodes();
             var pid = nodes[0].getParentNode().id;
-            alert(pid);
             $('#categoryFrame').attr('src','${ctx}/cms/category/create?nodeId='+pid);
         }
+        //删除栏目
+        function del(){
 
+        }
+        //修改栏目
+        function update(){
+            hideRMenu();
+            var nodes = zTree.getSelectedNodes();
+            var pid = nodes[0].id;
+            $('#categoryFrame').attr('src','${ctx}/cms/category/update?nodeId='+pid);
+        }
+        //发布栏目
+        function publish(){
+            hideRMenu();
+            var nodes = zTree.getSelectedNodes();
+            var pid = nodes[0].id;
+            $('#categoryFrame').attr('src','${ctx}/cms/category/publish?nodeId='+pid);
+        }
         var zTree, rMenu;
         $(document).ready(function(){
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
