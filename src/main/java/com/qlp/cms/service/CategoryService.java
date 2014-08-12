@@ -15,4 +15,6 @@ public interface CategoryService {
     Category save(Category category);
 
     List<TreeNode> findAllCategory(String siteId);
+
+    List<Category> findChildren(String categoryId);
 }

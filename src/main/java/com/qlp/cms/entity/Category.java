@@ -17,9 +17,9 @@ public class Category extends TopEntity {
 
     private String name;  //栏目名称
     private String path;  //访问路径
-    private String type;  //栏目类型
+    private String type = Type.SIMPLE;  //栏目类型
     private Integer sort = 0;  //排序字段,值越大排序越靠后
-    private String visiable = "0";  //是否可见,默认为0(0:不可见;1:可见)
+    private String visiable = "0";  //是否发布,默认为0(0:未发布;1:可见)
     private String author;  //创建人
 
     private Category parentCategory;  //父栏目

@@ -28,64 +28,49 @@
     <script type="text/javascript">
         var setting = {
             view: {
-                dblClickExpand: false
+                dblClickExpand: true
             },
             check: {
-                enable: true
+                enable: false
             },
             callback: {
-                onRightClick: OnRightClick
+                onRightClick: OnRightClick,
+                onClick : onClick
             }
         };
 
-        var zNodes =[
-            {id:1, name:"无右键菜单 1", open:true, noR:true,
-                children:[
-                    {id:11, name:"节点 1-1", noR:true},
-                    {id:12, name:"节点 1-2", noR:true}
-
-                ]},
-            {id:2, name:"右键操作 2", open:true,
-                children:[
-                    {id:21, name:"节点 2-1"},
-                    {id:22, name:"节点 2-2"},
-                    {id:23, name:"节点 2-3"},
-                    {id:24, name:"节点 2-4"}
-                ]},
-            {id:3, name:"右键操作 3", open:true,
-                children:[
-                    {id:31, name:"节点 3-1"},
-                    {id:32, name:"节点 3-2"},
-                    {id:33, name:"节点 3-3"},
-                    {id:34, name:"节点 3-4"}
-                ]}
-        ];
-
+        var zNodes = eval('${treeNodes}');
+        //右键菜单
         function OnRightClick(event, treeId, treeNode) {
             if (!treeNode && event.target.tagName.toLowerCase() != "button" && $(event.target).parents("a").length == 0) {
                 zTree.cancelSelectedNode();
-                showRMenu("root", event.clientX, event.clientY);
+                showRMenu("${siteId}", event.clientX, event.clientY,treeNode);
             } else if (treeNode && !treeNode.noR) {
                 zTree.selectNode(treeNode);
-                showRMenu("node", event.clientX, event.clientY);
+                showRMenu("node", event.clientX, event.clientY,treeNode);
             }
         }
-
-        function showRMenu(type, x, y) {
+        //显示或隐藏右键菜单
+        function showRMenu(type, x, y,treeNode) {
             $("#rMenu ul").show();
-            if (type=="root") {
+            var pid = treeNode.getParentNode();
+            if (pid==null) {
+                $("#m_add_next").show();
+                $("#m_add_brother").hide();
                 $("#m_del").hide();
-                $("#m_check").hide();
-                $("#m_unCheck").hide();
+                $("#m_update").hide();
+                $("#m_publish").hide();
             } else {
+                $("#m_add_next").show();
+                $("#m_add_brother").show();
                 $("#m_del").show();
-                $("#m_check").show();
-                $("#m_unCheck").show();
+                $("#m_update").show();
+                $("#m_publish").show();
             }
             rMenu.css({"top":y+"px", "left":x+"px", "visibility":"visible"});
-
             $("body").bind("mousedown", onBodyMouseDown);
         }
+        //隐藏右键菜单
         function hideRMenu() {
             if (rMenu) rMenu.css({"visibility": "hidden"});
             $("body").unbind("mousedown", onBodyMouseDown);
@@ -95,47 +80,32 @@
                 rMenu.css({"visibility" : "hidden"});
             }
         }
-        var addCount = 1;
-        function addTreeNode() {
-            hideRMenu();
-            var newNode = { name:"增加" + (addCount++)};
-            if (zTree.getSelectedNodes()[0]) {
-                newNode.checked = zTree.getSelectedNodes()[0].checked;
-                zTree.addNodes(zTree.getSelectedNodes()[0], newNode);
-            } else {
-                zTree.addNodes(null, newNode);
+        //节点单击事件
+        function onClick(event, treeId, treeNode, clickFlag){
+            var allFlag;
+            var nodes = zTree.getSelectedNodes();
+            var currentNodeId = nodes[0].id;
+            if(currentNodeId == 'root'){
+                currentNodeId = '${siteId}';
+                allFlag = 'all';
             }
+            $('#categoryFrame').attr('src','${ctx}/cms/category/childrenList?currentNodeId='+currentNodeId+'&allFlag='+allFlag
+            );
         }
-        function removeTreeNode() {
+        //新增同级栏目
+        function addBrother(){
             hideRMenu();
             var nodes = zTree.getSelectedNodes();
-            if (nodes && nodes.length>0) {
-                if (nodes[0].children && nodes[0].children.length > 0) {
-                    var msg = "要删除的节点是父节点，如果删除将连同子节点一起删掉。\n\n请确认！";
-                    if (confirm(msg)==true){
-                        zTree.removeNode(nodes[0]);
-                    }
-                } else {
-                    zTree.removeNode(nodes[0]);
-                }
-            }
-        }
-        function checkTreeNode(checked) {
-            var nodes = zTree.getSelectedNodes();
-            if (nodes && nodes.length>0) {
-                zTree.checkNode(nodes[0], checked, true);
-            }
-            hideRMenu();
-        }
-        function resetTree() {
-            hideRMenu();
-            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            var pid = nodes[0].getParentNode().id;
+            alert(pid);
+            $('#categoryFrame').attr('src','${ctx}/cms/category/create?nodeId='+pid);
         }
 
         var zTree, rMenu;
         $(document).ready(function(){
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
             zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            zTree.expandAll(true);
             rMenu = $("#rMenu");
         });
     </script>
@@ -150,10 +120,10 @@
             <ul id="treeDemo" class="ztree"></ul>
             <div id="rMenu" class="rmenu">
                 <ul style="width:150px;margin:0;padding:0;">
-                    <li id="m_add" onclick="addChild()">
+                    <li id="m_add_next" onclick="addChild()">
                         <i class="icon-plus"></i>新增下级栏目
                     </li>
-                    <li id="m_add_next" onclick="addBrother()">
+                    <li id="m_add_brother" onclick="addBrother()">
                         <i class="icon-plus"></i>新增同级栏目
                     </li>
                     <li id="m_del" onclick="del()">
@@ -169,10 +139,10 @@
             </div>
         </div>
         <div class="span9">
-           <%-- <iframe id="categoryFrame" name="categoryFrame"  src="" frameborder="0" scrolling="auto" width="100%"
-                    height="auto" style="position: absolute; margin: 0px; left: 199px; right: 0px; top: 109px;
+            <iframe id="categoryFrame" name="categoryFrame"  src="" frameborder="0" scrolling="auto" width="100%"
+                    height="auto" style="position: absolute; margin: 0px; left: 200px; right: 0px; top: 10px;
                      bottom: 0px; height: 533px; z-index: 0; display:
-                      block; visibility: visible; padding-left:0px; background-color:#FFFFFF"></iframe>--%>
+                      block; visibility: visible; padding-left:0px; background-color:#FFFFFF"></iframe>
         </div>
     </div>
 </div>

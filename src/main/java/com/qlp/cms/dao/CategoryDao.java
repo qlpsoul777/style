@@ -2,6 +2,7 @@ package com.qlp.cms.dao;
 
 import com.qlp.cms.entity.Category;
 import com.qlp.commons.orm.QlpJpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -11,4 +12,7 @@ import java.util.List;
 public interface CategoryDao extends QlpJpaRepository<Category, String> {
 
     List<Category> findBySiteIdAndParentCategoryIdIsNull(String siteId);
+
+    @Query("SELECT c FROM Category c where c.parentCategory.id = ?1 order by c.sort asc")
+    List<Category> findByPid(String categoryId);
 }

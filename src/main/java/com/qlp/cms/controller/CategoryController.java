@@ -66,13 +66,29 @@ public class CategoryController {
         return "/style/cms/category/list";
     }
 
+    /**
+     * 左侧栏目树
+     * @param request
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "look", method = RequestMethod.GET)
     public String look(HttpServletRequest request,Model model){
         String siteId = request.getParameter("siteId");
         List<TreeNode> nodes = categoryService.findAllCategory(siteId);
-        String s = JsonMapper.nonDefaultMapper().toJson(nodes);
+        String s = new JsonMapper().toJson(nodes);
         System.out.print(s);
+        model.addAttribute("treeNodes",s);
+        model.addAttribute("siteId",siteId);
         return "/style/cms/category/categoryList";
+    }
+
+    //新增栏目
+    @RequestMapping(value = "create" , method = RequestMethod.GET)
+    public String create(HttpServletRequest request,Model model){
+        String nodeId = request.getParameter("nodeId");
+        model.addAttribute("nodeId",nodeId);
+        return "/style/cms/category/edit";
     }
 
 }

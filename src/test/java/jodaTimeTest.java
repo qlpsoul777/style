@@ -23,5 +23,9 @@ public class jodaTimeTest {
         for(String s:allDate){
             System.out.println(s);
         }
+
+        String endTime = "2014-08-12";
+        DateTime dt3 = new DateTime(endTime);
+        System.out.println(dt3.isBeforeNow());
     }
 }

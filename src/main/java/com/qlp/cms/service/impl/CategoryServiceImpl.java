@@ -40,15 +40,12 @@ public class CategoryServiceImpl implements CategoryService {
         Site site = siteDao.findOne(siteId);
         List<TreeNode> nodes = new ArrayList<>();
         nodes.add(new TreeNode("root",site.getcName(),getChildren(categories)));
-        /*for(Category c: categories){
-            TreeNode node = new TreeNode();
-            node.setId(c.getId());
-            node.setName(c.getName());
-            List<TreeNode> children = getChildren(c.getChildCategory());
-            node.setChildren(children);
-            nodes.add(node);
-        }*/
         return nodes;
+    }
+
+    @Override
+    public List<Category> findChildren(String categoryId) {
+        return categoryDao.findByPid(categoryId);
     }
 
     private List<TreeNode> getChildren(List<Category> childCategory) {
@@ -57,7 +54,8 @@ public class CategoryServiceImpl implements CategoryService {
             TreeNode node = new TreeNode();
             node.setId(c.getId());
             node.setName(c.getName());
-            node.setChildren(getChildren(c.getChildCategory()));
+            List<Category> children = findChildren(c.getId());
+            node.setChildren(getChildren(children));
             nodes.add(node);
         }
         return nodes;
