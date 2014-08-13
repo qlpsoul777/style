@@ -25,6 +25,7 @@
     <script src="${ctx}/static/js/jquery.js"></script>
     <script src="${ctx}/static/js/bootstrap.js"></script>
     <script src="${ctx}/static/js/jquery.ztree.all-3.5.js"></script>
+    <script src="${ctx}/static/js/cookie/jquery.cookie.min.js"></script>
     <script type="text/javascript">
         var setting = {
             view: {
@@ -130,6 +131,10 @@
             zTree = $.fn.zTree.getZTreeObj("treeDemo");
             zTree.expandAll(true);
             rMenu = $("#rMenu");
+        });
+        $(function(){
+            //将站点id存入cookie中（会话级cookie，关闭浏览器后删除）
+            $.cookie('siteId', '${siteId}');
         });
     </script>
 </head>

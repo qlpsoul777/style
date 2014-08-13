@@ -16,10 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefaults;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -83,9 +80,31 @@ public class CategoryController {
         return "/style/cms/category/categoryList";
     }
 
+    /**
+     * 当前节点下的所有栏目
+     * @param request
+     * @param model
+     * @return
+     */
+    public String childrenList(@PageableDefaults(10) Pageable pageable,HttpServletRequest request,Model model){
+        String currentNodeId = request.getParameter("currentNodeId");
+        String allFlag = request.getParameter("allFlag");
+        Map<String,Object> map = new HashMap<>();
+        Sort sort = new Sort(Sort.Direction.ASC,"sort");
+        PageRequest pr = new PageRequest(pageable.getPageNumber(),pageable.getPageSize(),sort);
+        Page<Category> pageInfo;
+        if(StringUtils.isNotBlank(allFlag)){
+            map.put("site.id",currentNodeId);
+            pageInfo = categoryService.findPageByMap(map,pr);
+        }else{
+
+        }
+        return "";
+    }
+
     //新增栏目
     @RequestMapping(value = "create" , method = RequestMethod.GET)
-    public String create(HttpServletRequest request,Model model){
+    public String create(@CookieValue("siteId")String siteId,HttpServletRequest request,Model model){
         String nodeId = request.getParameter("nodeId");
         model.addAttribute("nodeId",nodeId);
         return "/style/cms/category/edit";
