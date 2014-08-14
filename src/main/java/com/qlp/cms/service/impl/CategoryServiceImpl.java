@@ -6,7 +6,7 @@ import com.qlp.cms.entity.Category;
 import com.qlp.cms.entity.Site;
 import com.qlp.cms.service.CategoryService;
 import com.qlp.commons.entity.TreeNode;
-import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Criteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by qlp on 2014/6/20.
@@ -63,25 +61,26 @@ public class CategoryServiceImpl implements CategoryService {
         if(category != null){
             ids.add(category.getId());
             if(!category.getChildCategory().isEmpty()){
-                ids.addAll(findAllChildren(category.getId()));
+                findAllChildren(category.getId(),ids);
             }
         }else{
             logger.error("查询出当前栏目和栏目的子栏目的id方法中，根据传入的参数查询不到栏目");
         }
-        return null;
+        return ids;
     }
 
-    public List<String> findAllChildren(String pid){
+    public void findAllChildren(String pid,List<String> oldIds){
         List<String> ids = new ArrayList<>();
         List<Category> categories = findChildren(pid);
         if(!categories.isEmpty()){
             for(Category c : categories){
+                ids.add(c.getId());
                 if(!c.getChildCategory().isEmpty()){
-                    ids.add(c.getId());
+                    findAllChildren(c.getId(),ids);
                 }
             }
         }
-        return ids;
+        oldIds.addAll(ids);
     }
 
     public List<Category> findChildren(String categoryId) {
@@ -92,6 +91,19 @@ public class CategoryServiceImpl implements CategoryService {
     public Page<Category> findPageByMap(Map<String, Object> map, Pageable pageable) {
         return categoryDao.queryPageByMap(map,pageable);
     }
+
+    @Override
+    public Page<Category> findPageByIdAndMap(Map<String,Object> map,String id, Pageable pageable) {
+        List<String> ids = findChildrenId(id);
+        if(!ids.isEmpty()){
+            map.put("id_in",ids);
+            return categoryDao.queryPageByMap(map,pageable);
+        }else{
+            logger.error("查询当前栏目的所有子栏目中传入当前栏目id有误",id);
+            return null;
+        }
+    }
+
 
     private List<TreeNode> getChildren(List<Category> childCategory) {
         List<TreeNode> nodes = new ArrayList<>();

@@ -86,6 +86,7 @@ public class CategoryController {
      * @param model
      * @return
      */
+    @RequestMapping(value = "childrenList", method = RequestMethod.GET)
     public String childrenList(@PageableDefaults(10) Pageable pageable,HttpServletRequest request,Model model){
         String currentNodeId = request.getParameter("currentNodeId");
         String allFlag = request.getParameter("allFlag");
@@ -97,16 +98,41 @@ public class CategoryController {
             map.put("site.id",currentNodeId);
             pageInfo = categoryService.findPageByMap(map,pr);
         }else{
-
+            pageInfo = categoryService.findPageByIdAndMap(map,currentNodeId,pr);
         }
-        return "";
+        model.addAttribute("pageInfo",pageInfo);
+        model.addAttribute("currentNodeId",currentNodeId);
+        model.addAttribute("allFlag",allFlag);
+        return "/style/cms/category/childrenList";
     }
 
     //新增栏目
     @RequestMapping(value = "create" , method = RequestMethod.GET)
     public String create(@CookieValue("siteId")String siteId,HttpServletRequest request,Model model){
+        String pid = request.getParameter("nodeId");
+        model.addAttribute("pid",pid);
+        return "/style/cms/category/edit";
+    }
+
+    @RequestMapping(value = "save" , method = RequestMethod.POST)
+    public String save(HttpServletRequest request,Model model,@ModelAttribute("category")Category category){
+        String pid = request.getParameter("pid");
+        Category parent = categoryService.get(pid);
+        if(parent != null){
+            category.setParentCategory(parent);
+        }
+        String siteId = request.getParameter("siteId");
+        Site site = siteService.get(siteId);
+        category.setSite(site);
+        categoryService.save(category);
+        return "redirect:/cms/site/list";
+    }
+
+    @RequestMapping(value = "update" , method = RequestMethod.GET)
+    public String update(@CookieValue("siteId")String siteId,HttpServletRequest request,Model model){
         String nodeId = request.getParameter("nodeId");
-        model.addAttribute("nodeId",nodeId);
+        Category category = categoryService.get(nodeId);
+        model.addAttribute("category",category);
         return "/style/cms/category/edit";
     }
 

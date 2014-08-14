@@ -83,7 +83,7 @@
         }
         //节点单击事件
         function onClick(event, treeId, treeNode, clickFlag){
-            var allFlag;
+            var allFlag = '';
             var nodes = zTree.getSelectedNodes();
             var currentNodeId = nodes[0].id;
             if(currentNodeId == 'root'){
@@ -105,6 +105,10 @@
             hideRMenu();
             var nodes = zTree.getSelectedNodes();
             var pid = nodes[0].getParentNode().id;
+            var node = zTree.getNodeByParam('id','root');
+            if(node.id == pid){
+                pid = '';
+            }
             $('#categoryFrame').attr('src','${ctx}/cms/category/create?nodeId='+pid);
         }
         //删除栏目

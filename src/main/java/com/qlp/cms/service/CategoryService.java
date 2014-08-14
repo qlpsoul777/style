@@ -32,4 +32,6 @@ public interface CategoryService {
     List<String> findChildrenId(String categoryId);
 
     Page<Category> findPageByMap(Map<String,Object> map,Pageable pageable);
+
+    Page<Category> findPageByIdAndMap(Map<String,Object> map,String id,Pageable pageable);
 }
