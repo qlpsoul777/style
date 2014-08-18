@@ -55,6 +55,7 @@
             <form:form id="editForm" action="${ctx}/cms/category/save" method="post" modelAttribute="category" cssClass="form-horizontal">
                 <form:hidden path="id" />
                 <input type="hidden" name="pid" value="${pid}"/>
+                <input type="hidden" name="siteId" value="${siteId}"/>
                 <div class="toolbar">
                     <ul>
                         <li>

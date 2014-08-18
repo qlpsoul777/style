@@ -52,6 +52,12 @@ public class CategoryController {
         }
     }
 
+    /**
+     * 已发布站点名
+     * @param pageable
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public String list(@PageableDefaults(10) Pageable pageable,Model model){
         Map<String,Object> map = new HashMap<String,Object>();
@@ -100,20 +106,34 @@ public class CategoryController {
         }else{
             pageInfo = categoryService.findPageByIdAndMap(map,currentNodeId,pr);
         }
-        model.addAttribute("pageInfo",pageInfo);
+        model.addAttribute("pageInfo", pageInfo);
         model.addAttribute("currentNodeId",currentNodeId);
         model.addAttribute("allFlag",allFlag);
         return "/style/cms/category/childrenList";
     }
 
-    //新增栏目
+    /**
+     * 新增栏目
+     * @param siteId
+     * @param request
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "create" , method = RequestMethod.GET)
     public String create(@CookieValue("siteId")String siteId,HttpServletRequest request,Model model){
         String pid = request.getParameter("nodeId");
         model.addAttribute("pid",pid);
+        model.addAttribute("siteId",siteId);
         return "/style/cms/category/edit";
     }
 
+    /**
+     * 新增和修改的保存
+     * @param request
+     * @param model
+     * @param category
+     * @return
+     */
     @RequestMapping(value = "save" , method = RequestMethod.POST)
     public String save(HttpServletRequest request,Model model,@ModelAttribute("category")Category category){
         String pid = request.getParameter("pid");
@@ -125,15 +145,70 @@ public class CategoryController {
         Site site = siteService.get(siteId);
         category.setSite(site);
         categoryService.save(category);
-        return "redirect:/cms/site/list";
+        if(StringUtils.isBlank(pid)){
+            model.addAttribute("currentNodeId",siteId);
+            model.addAttribute("allFlag","all");
+        }else {
+            model.addAttribute("currentNodeId",pid);
+        }
+        return "redirect:/cms/category/childrenList";
     }
 
+    /**
+     * 右键删除栏目
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "deleteOnRight/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public String deleteOnRight(@PathVariable("id") String id) {
+        String flag = "";
+        try {
+            categoryService.deleteCategory(id);
+            flag = "success";
+        } catch (Exception e) {
+            flag = "error";
+        }
+        return flag;
+    }
+
+    /**
+     * 右键修改栏目
+     * @param request
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "update" , method = RequestMethod.GET)
-    public String update(@CookieValue("siteId")String siteId,HttpServletRequest request,Model model){
+    public String update(HttpServletRequest request,Model model){
         String nodeId = request.getParameter("nodeId");
         Category category = categoryService.get(nodeId);
         model.addAttribute("category",category);
+        String pid = "";
+        Category parent = category.getParentCategory();
+        if(parent != null){
+            pid = parent.getId();
+        }
+        model.addAttribute("pid",pid);
+        model.addAttribute("siteId",category.getSite().getId());
         return "/style/cms/category/edit";
+    }
+
+    /**
+     * 右键发布栏目
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "publish/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public String publish(@PathVariable("id") String id) {
+        String flag = "";
+        try {
+            categoryService.publish(id);
+            flag = "success";
+        } catch (Exception e) {
+            flag = "error";
+        }
+        return flag;
     }
 
 }

@@ -34,4 +34,8 @@ public interface CategoryService {
     Page<Category> findPageByMap(Map<String,Object> map,Pageable pageable);
 
     Page<Category> findPageByIdAndMap(Map<String,Object> map,String id,Pageable pageable);
+
+    void deleteCategory(String id);
+
+    void publish(String id);
 }

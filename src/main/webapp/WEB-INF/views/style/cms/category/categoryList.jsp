@@ -98,6 +98,9 @@
             hideRMenu();
             var nodes = zTree.getSelectedNodes();
             var pid = nodes[0].id;
+            if(pid == 'root'){
+                pid = '';
+            }
             $('#categoryFrame').attr('src','${ctx}/cms/category/create?nodeId='+pid);
         }
         //新增同级栏目
@@ -113,7 +116,21 @@
         }
         //删除栏目
         function del(){
-
+            hideRMenu();
+            var nodes = zTree.getSelectedNodes();
+            var pid = nodes[0].id;
+            if(confirm("确定要删除当前栏目及其子栏目吗？")){
+                $.get("${ctx}/cms/category/deleteOnRight/"+pid,function(data){
+                    if(data == 'success'){
+                        zTree.removeNode(nodes[0]);//删除节点
+                        zTree.reAsyncChildNodes(nodes[0], "refresh"); //刷新树
+                    }else{
+                        alert("删除失败，请重试");
+                    }
+                });
+            }else{
+                return false;
+            }
         }
         //修改栏目
         function update(){
@@ -127,7 +144,14 @@
             hideRMenu();
             var nodes = zTree.getSelectedNodes();
             var pid = nodes[0].id;
-            $('#categoryFrame').attr('src','${ctx}/cms/category/publish?nodeId='+pid);
+            $.get("${ctx}/cms/category/publish/"+pid,function(data){
+                if(data == 'success'){
+                    alert("发布成功");
+                    zTree.updateNode(nodes[0]);
+                }else{
+                    alert("发布栏目失败，请重试");
+                }
+            });
         }
         var zTree, rMenu;
         $(document).ready(function(){
@@ -149,6 +173,7 @@
             <div>
                 <h3>新闻栏目</h3>
             </div>
+            <a href="${ctx}/cms/category/look?siteId=${siteId}" class="btn btn-primary">刷新</a>
             <ul id="treeDemo" class="ztree"></ul>
             <div id="rMenu" class="rmenu">
                 <ul style="width:150px;margin:0;padding:0;">
@@ -171,7 +196,7 @@
             </div>
         </div>
         <div class="span9">
-            <iframe id="categoryFrame" name="categoryFrame"  src="" frameborder="0" scrolling="auto" width="100%"
+            <iframe id="categoryFrame" name="categoryFrame"  src="${ctx}/cms/category/childrenList?currentNodeId=${siteId}&&allFlag=all" frameborder="0" scrolling="auto" width="100%"
                     height="auto" style="position: absolute; margin: 0px; left: 200px; right: 0px; top: 10px;
                      bottom: 0px; height: 533px; z-index: 0; display:
                       block; visibility: visible; padding-left:0px; background-color:#FFFFFF"></iframe>

@@ -104,6 +104,17 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    @Transactional(readOnly = false)
+    public void deleteCategory(String id) {
+        List<String> ids = findChildrenId(id);
+        if(!ids.isEmpty()){
+            for(String categoryId :ids){
+                categoryDao.delete(categoryId);
+            }
+            categoryDao.flush();
+        }
+    }
+
 
     private List<TreeNode> getChildren(List<Category> childCategory) {
         List<TreeNode> nodes = new ArrayList<>();

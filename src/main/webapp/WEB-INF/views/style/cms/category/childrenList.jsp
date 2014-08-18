@@ -22,9 +22,9 @@
                 $('input[name = "chkName"]').prop('checked', $('#chk_all').prop('checked'));
             });
 
-            $('#queryTable tbody tr').css({'cursor': 'pointer'}).on('click', function () {
-                window.location.href = '${ctx}/role/info?id=' + $(this).attr('data-row-id');
-            })
+            <%--$('#queryTable tbody tr').css({'cursor': 'pointer'}).on('click', function () {--%>
+                <%--window.location.href = '${ctx}/role/info?id=' + $(this).attr('data-row-id');--%>
+            <%--})--%>
             $('input[name="chkName"]').parent('td').on('click', function (event) {
                 event.stopPropagation();
             });
@@ -63,7 +63,9 @@
 <body>
 <div class="container-fluid">
     <div class="row-fluid">
-        <form id="queryForm" action="${ctx}/role/roleList" method="get">
+        <form id="queryForm" action="${ctx}/cms/category/childrenList" method="get">
+            <input type="hidden" name="currentNodeId" value="${currentNodeId}"/>
+            <input type="hidden" name="allFlag" value="${allFlag}"/>
             <div class="span10">
                 <div>
                     <h3>角色管理列表</h3>
