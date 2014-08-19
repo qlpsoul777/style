@@ -20,4 +20,5 @@ public interface CategoryDao extends QlpJpaRepository<Category, String> {
 
     @Query("SELECT distinct c FROM Category c where c.id in ?1 ")
     Page<Category> findByIds(List<String> ids,Pageable pageable);
+
 }

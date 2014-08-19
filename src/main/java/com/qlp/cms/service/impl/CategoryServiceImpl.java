@@ -115,6 +115,21 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    @Transactional(readOnly = false)
+    public void publish(String id) {
+        List<String> ids = findChildrenId(id);
+        if(!ids.isEmpty()){
+            for(String categoryId : ids){
+                Category category = get(categoryId);
+                if(category != null){
+                    category.setVisiable("1");
+                    save(category);
+                }
+            }
+            categoryDao.flush();
+        }
+    }
+
 
     private List<TreeNode> getChildren(List<Category> childCategory) {
         List<TreeNode> nodes = new ArrayList<>();
