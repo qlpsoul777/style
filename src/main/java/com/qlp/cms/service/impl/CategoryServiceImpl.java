@@ -6,7 +6,6 @@ import com.qlp.cms.entity.Category;
 import com.qlp.cms.entity.Site;
 import com.qlp.cms.service.CategoryService;
 import com.qlp.commons.entity.TreeNode;
-import org.hibernate.Criteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +44,46 @@ public class CategoryServiceImpl implements CategoryService {
         Site site = siteDao.findOne(siteId);
         List<TreeNode> nodes = new ArrayList<>();
         nodes.add(new TreeNode("root",site.getcName(),getChildren(categories)));
+        return nodes;
+    }
+
+    private List<TreeNode> getChildren(List<Category> childCategory) {
+        List<TreeNode> nodes = new ArrayList<>();
+        for(Category c: childCategory){
+            TreeNode node = new TreeNode();
+            node.setId(c.getId());
+            node.setName(c.getName());
+            List<Category> children = findChildren(c.getId());
+            node.setChildren(getChildren(children));
+            nodes.add(node);
+        }
+        return nodes;
+    }
+
+    /**
+     * 查询出站点下所有已发布的栏目
+     *
+     * @param siteId
+     * @return
+     */
+    public List<TreeNode> findAllVisiableCategory(String siteId) {
+        List<Category> categories = categoryDao.findVisiableCategoryBySiteId(siteId);
+        Site site = siteDao.findOne(siteId);
+        List<TreeNode> nodes = new ArrayList<>();
+        nodes.add(new TreeNode("root",site.getcName(),getVisiableChildren(categories)));
+        return nodes;
+    }
+
+    private List<TreeNode> getVisiableChildren(List<Category> categories) {
+        List<TreeNode> nodes = new ArrayList<>();
+        for(Category c: categories){
+            TreeNode node = new TreeNode();
+            node.setId(c.getId());
+            node.setName(c.getName());
+            List<Category> children = categoryDao.findVisiableByPid(c.getId());
+            node.setChildren(getVisiableChildren(children));
+            nodes.add(node);
+        }
         return nodes;
     }
 
@@ -128,19 +167,5 @@ public class CategoryServiceImpl implements CategoryService {
             }
             categoryDao.flush();
         }
-    }
-
-
-    private List<TreeNode> getChildren(List<Category> childCategory) {
-        List<TreeNode> nodes = new ArrayList<>();
-        for(Category c: childCategory){
-            TreeNode node = new TreeNode();
-            node.setId(c.getId());
-            node.setName(c.getName());
-            List<Category> children = findChildren(c.getId());
-            node.setChildren(getChildren(children));
-            nodes.add(node);
-        }
-        return nodes;
     }
 }

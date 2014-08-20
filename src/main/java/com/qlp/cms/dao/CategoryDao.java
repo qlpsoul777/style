@@ -15,10 +15,17 @@ public interface CategoryDao extends QlpJpaRepository<Category, String> {
 
     List<Category> findBySiteIdAndParentCategoryIdIsNull(String siteId);
 
-    @Query("SELECT c FROM Category c where c.parentCategory.id = ?1 order by c.sort asc")
+    @Query("SELECT distinct c FROM Category c where c.parentCategory.id = ?1 order by c.sort asc")
     List<Category> findByPid(String categoryId);
 
     @Query("SELECT distinct c FROM Category c where c.id in ?1 ")
     Page<Category> findByIds(List<String> ids,Pageable pageable);
+
+    @Query("SELECT distinct c FROM Category c where c.site.id = ?1 and c.visiable = '1' " +
+            " and c.parentCategory.id is null ")
+    List<Category> findVisiableCategoryBySiteId(String siteId);
+
+    @Query("SELECT distinct c FROM Category c where c.parentCategory.id = ?1 and c.visiable = '1' order by c.sort asc")
+    List<Category> findVisiableByPid(String categoryId);
 
 }

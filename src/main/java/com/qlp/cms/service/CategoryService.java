@@ -25,6 +25,13 @@ public interface CategoryService {
     List<TreeNode> findAllCategory(String siteId);
 
     /**
+     * 查询出站点下所有已发布的栏目
+     * @param siteId
+     * @return
+     */
+    List<TreeNode> findAllVisiableCategory(String siteId);
+
+    /**
      * 查询出当前栏目和栏目的子栏目的id
      * @param categoryId
      * @return

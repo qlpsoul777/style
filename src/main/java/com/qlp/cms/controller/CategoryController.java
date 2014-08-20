@@ -80,7 +80,6 @@ public class CategoryController {
         String siteId = request.getParameter("siteId");
         List<TreeNode> nodes = categoryService.findAllCategory(siteId);
         String s = new JsonMapper().toJson(nodes);
-        System.out.print(s);
         model.addAttribute("treeNodes",s);
         model.addAttribute("siteId",siteId);
         return "/style/cms/category/categoryList";

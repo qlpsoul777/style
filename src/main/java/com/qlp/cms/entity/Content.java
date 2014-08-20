@@ -2,8 +2,7 @@ package com.qlp.cms.entity;
 
 import com.qlp.commons.entity.TopEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,9 +16,10 @@ public class Content extends TopEntity {
 
     private String title;//新闻标题
     private String depTitle;//新闻副标题
-    private String type;//信息类型
+    private String type;//新闻类型
     private String keywords;//关键字
     private String isNew;//是否是新内容
+    private String status; //状态(0:未审核，1：审核中，2：审核通过，3：审核未通过，4：待发布，5：已发布)
     private String canReview;//是否允许评论内容
     private String contentBody;//内容正文
     private String imgPath;//图片地址
@@ -120,6 +120,16 @@ public class Content extends TopEntity {
         this.author = author;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     public Category getCategory() {
         return category;
     }
@@ -128,6 +138,8 @@ public class Content extends TopEntity {
         this.category = category;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "site_id")
     public Site getSite() {
         return site;
     }
@@ -136,6 +148,8 @@ public class Content extends TopEntity {
         this.site = site;
     }
 
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "cms_content_id")
     public List<Version> getVersions() {
         return versions;
     }
