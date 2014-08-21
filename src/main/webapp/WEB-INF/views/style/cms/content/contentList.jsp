@@ -17,47 +17,12 @@
     <script src="${ctx}/static/js/bootstrap.js"></script>
     <script type="text/javascript">
         $(function () {
-            // 处理全选
-            $('#chk_all').click(function () {
-                $('input[name = "chkName"]').prop('checked', $('#chk_all').prop('checked'));
-            });
-
-            <%--$('#queryTable tbody tr').css({'cursor': 'pointer'}).on('click', function () {--%>
-                <%--window.location.href = '${ctx}/role/info?id=' + $(this).attr('data-row-id');--%>
-            <%--})--%>
-            $('input[name="chkName"]').parent('td').on('click', function (event) {
-                event.stopPropagation();
-            });
-            //批量启用/禁用角色
-            $('#batchUse').click(function () {
-                var ids = checkSelect();
-                if (ids.length == 0) {
-                    alert("请选择操作项！");
-                    return false;
-                } else {
-                    if (confirm("您确定要启用/禁用这些角色吗？") == true) {
-                        window.location.href = '${ctx}/role/batchUse?ids=' + ids;
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            });
-        });
-        //获取复选框的值
-        function checkSelect() {
-            var names = document.getElementsByName("chkName");
-            var ids = "";
-            if (names.length >= 1) {
-                for (var i = 0; i < names.length; i++) {
-                    if (names[i].checked == true) {
-                        ids = ids + names[i].value + ",";
-                    }
-                }
-                ids = ids.substring(0, ids.length - 1);
+            var categoryId = '${currentNodeId}';
+            var siteId = '${siteId}';
+            if(categoryId == siteId){
+                $('#createCont').hide();
             }
-            return ids;
-        }
+        });
     </script>
 </head>
 <body>
@@ -71,7 +36,7 @@
                     <h3>新闻列表</h3>
                 </div>
                 <div class="toolbar">
-                    <ul>
+                    <%--<ul>
                         <li><h4>角色名：</h4></li>
                         <li><input type="text" name="roleName" value="${roleName}" placeholder="例：系统管理员"/></li>
                         <li><h4>角色类型：</h4></li>
@@ -89,14 +54,14 @@
                             <button id="subFind" type="submit" class="btn btn-success">查询</button>
                         </li>
                     </ul>
-                    </br>
+                    </br>--%>
                     <ul>
                         <li>
-                            <a href="${ctx}/role/create" class="btn btn-success">新增</a>
+                            <a href="${ctx}/cms/content/create?categoryId=${currentNodeId}" id="createCont" class="btn btn-success">新增</a>
                         </li>
-                        <li>
+                        <%--<li>
                             <a href="#" class="btn btn-warning" id="batchUse">启用/禁用</a>
-                        </li>
+                        </li>--%>
                     </ul>
                 </div>
                 <table class="table" id="queryTable">

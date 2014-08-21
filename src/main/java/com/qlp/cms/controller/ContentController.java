@@ -98,11 +98,11 @@ public class ContentController {
      * @return
      */
     @RequestMapping(value = "contentList", method = RequestMethod.GET)
-    public String contentList(@PageableDefaults(10) Pageable pageable,HttpServletRequest request,Model model){
+    public String contentList(@CookieValue("siteId")String siteId,@PageableDefaults(10) Pageable pageable,HttpServletRequest request,Model model){
         String currentNodeId = request.getParameter("currentNodeId");
         String allFlag = request.getParameter("allFlag");
         Map<String,Object> map = new HashMap<>();
-        Sort sort = new Sort(Sort.Direction.ASC,"sort");
+        Sort sort = new Sort(Sort.Direction.ASC,"createTime");
         PageRequest pr = new PageRequest(pageable.getPageNumber(),pageable.getPageSize(),sort);
         Page<Content> pageInfo;
         if(StringUtils.isNotBlank(allFlag)){
@@ -113,6 +113,7 @@ public class ContentController {
             pageInfo = contentService.findPageByMap(map,pr);
         }
         model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("siteId", siteId);
         model.addAttribute("currentNodeId",currentNodeId);
         model.addAttribute("allFlag",allFlag);
         return "/style/cms/content/contentList";

@@ -20,8 +20,9 @@
     <script src="${ctx}/static/js/jquery.js"></script>
     <script src="${ctx}/static/js/bootstrap.js"></script>
     <script src="${ctx}/static/js/validation/jquery.validate.js"></script>
-    <script src="${ctx}/static/js/uEditor/ueditor.all.js"></script>
-    <script src="${ctx}/static/js/uEditor/ueditor.config.js"></script>
+    <script src="${ctx}/static/plugins/ueditor/ueditor.config.js"></script>
+    <script src="${ctx}/static/plugins/ueditor/ueditor.all.js"></script>
+    <script src="${ctx}/static/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
     <script type="text/javascript">
         var ue = UE.getEditor('contentBody');
        /* $(function(){
@@ -127,11 +128,11 @@
                 <tr>
                     <td colspan="2">
                         <div class="control-group">
-                            <label class="control-label">站点简介：</label>
-                            <div class="controls">
-                                <script id="contentBody " name="contentBody " type="text/plain ">这里写你的初始化内容</script>
+<%--                            <label class="control-label">站点简介：</label>--%>
+
+                                <script id="contentBody" name="contentBody" type="text/plain" style="width: 750px;height: 350px;resize: none">这里写你的初始化内容</script>
                                 <%--<form:textarea path="contentBody" style="width: 750px;height: 150px;resize: none"/>--%>
-                            </div>
+
                         </div>
                     </td>
                 </tr>
