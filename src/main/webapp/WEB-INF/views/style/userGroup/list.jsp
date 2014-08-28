@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>角色管理</title>
+    <title>用户组管理</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${ctx}/static/css/bootstrap.css" media="screen">
     <link rel="stylesheet" href="${ctx}/static/css/font-awesome.css">
@@ -16,58 +16,16 @@
     <script src="${ctx}/static/js/jquery.js"></script>
     <script src="${ctx}/static/js/bootstrap.js"></script>
     <script type="text/javascript">
-        $(function () {
-            // 处理全选
-            $('#chk_all').click(function () {
-                $('input[name = "chkName"]').prop('checked', $('#chk_all').prop('checked'));
-            });
-
-            $('#queryTable tbody tr').css({'cursor': 'pointer'}).on('click', function () {
-                window.location.href = '${ctx}/role/info?id=' + $(this).attr('data-row-id');
-            })
-            $('input[name="chkName"]').parent('td').on('click', function (event) {
-                event.stopPropagation();
-            });
-            //批量启用/禁用角色
-            $('#batchUse').click(function () {
-                var ids = checkSelect();
-                if (ids.length == 0) {
-                    alert("请选择操作项！");
-                    return false;
-                } else {
-                    if (confirm("您确定要启用/禁用这些角色吗？") == true) {
-                        window.location.href = '${ctx}/role/batchUse?ids=' + ids;
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            });
-        });
-        //获取复选框的值
-        function checkSelect() {
-            var names = document.getElementsByName("chkName");
-            var ids = "";
-            if (names.length >= 1) {
-                for (var i = 0; i < names.length; i++) {
-                    if (names[i].checked == true) {
-                        ids = ids + names[i].value + ",";
-                    }
-                }
-                ids = ids.substring(0, ids.length - 1);
-            }
-            return ids;
-        }
     </script>
 </head>
 <body>
 <div class="container-fluid">
     <div class="row-fluid">
         <%--<div class="span2"></div>--%>
-        <form id="queryForm" action="${ctx}/role/roleList" method="get">
+        <form id="queryForm" action="${ctx}/role/userGroupList" method="get">
             <div class="span12">
                 <div>
-                    <h3>角色管理列表</h3>
+                    <h3>角色列表</h3>
                 </div>
                 <div class="toolbar">
                     <ul>
@@ -88,30 +46,20 @@
                             <button id="subFind" type="submit" class="btn btn-success">查询</button>
                         </li>
                     </ul>
-                    </br>
-                    <ul>
-                        <li>
-                            <a href="${ctx}/role/create" class="btn btn-success">新增</a>
-                        </li>
-                        <li>
-                            <a href="#" class="btn btn-warning" id="batchUse">启用/禁用</a>
-                        </li>
-                    </ul>
                 </div>
                 <table class="table" id="queryTable">
                     <thead>
                     <tr>
-                        <th><input type="checkbox" id="chk_all" name="chk_all"></th>
                         <th>角色名</th>
                         <th>描述</th>
                         <th>类型</th>
                         <th>状态</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:forEach items="${pageInfo.content}" var="role">
-                        <tr data-row-id="${role.id}">
-                            <td><input type="checkbox" name="chkName" value="${role.id}"/></td>
+                        <tr>
                             <td>${role.name}</td>
                             <td>${role.description}</td>
                             <td>
@@ -129,6 +77,9 @@
                                 <c:if test="${role.state eq 'DISENABLE'}">
                                     <i class="icon-remove-sign">已禁用</i>
                                 </c:if>
+                            </td>
+                            <td>
+                                <a href="${ctx}/role/userGroupInfo?id=${role.id}" class="btn btn-success">编辑用户组</a>
                             </td>
                         </tr>
                     </c:forEach>

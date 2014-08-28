@@ -45,4 +45,6 @@ public interface UserService {
     void batchDelete(String ids);
 
     void delete(String id);
+
+    List<User> findByRoleId(String roleId);
 }

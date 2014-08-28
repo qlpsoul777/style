@@ -84,6 +84,11 @@ public class QlpJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
         return c;
     }
 
+    public Criteria createCriteria() {
+        Criteria criteria = getSession().createCriteria(entityClass);
+        return criteria;
+    }
+
     private Criterion entryToCriterion(String key, Object o) {
         String[] k = StringUtils.split(key, '_');
         if (k.length < 2) {

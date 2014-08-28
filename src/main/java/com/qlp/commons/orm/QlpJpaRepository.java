@@ -30,4 +30,6 @@ public abstract interface QlpJpaRepository<T, ID extends Serializable> extends J
     public abstract Page<T> queryPageByCriteria(Criteria criteria, Pageable pageable);
 
     public Criteria mapToCriteria(Map<String, Object> map);
+
+    public Criteria createCriteria();
 }

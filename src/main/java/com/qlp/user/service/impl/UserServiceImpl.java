@@ -49,7 +49,9 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     public List<User> findByMap(Map<String, Object> map) {
-        return userDao.queryByMap(map);
+        Criteria criteria = userDao.mapToCriteria(map);
+        criteria.createAlias("roles","roles");
+        return userDao.queryByCriteria(criteria);
     }
 
     /**
@@ -132,6 +134,12 @@ public class UserServiceImpl implements UserService {
     public void delete(String id) {
         userDao.delete(id);
         userDao.flush();
+    }
+
+    public List<User> findByRoleId(String roleId) {
+        Criteria criteria = userDao.createCriteria();
+        criteria.createAlias("roles", "r").add(Restrictions.eq("r.id",roleId));
+        return userDao.queryByCriteria(criteria);
     }
 
 }

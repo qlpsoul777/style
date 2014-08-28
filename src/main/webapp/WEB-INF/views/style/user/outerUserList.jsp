@@ -21,9 +21,9 @@
 <body>
 <div class="container-fluid">
     <div class="row-fluid">
-        <div class="span2"></div>
+       <%-- <div class="span1"></div>--%>
         <form id="queryForm" action="${ctx}/user/index/list/${type}" method="get">
-            <div class="span8">
+            <div class="span12">
                 <div>
                     <h3>注册用户管理列表</h3>
                 </div>
@@ -91,7 +91,7 @@
                 </div>
             </div>
         </form>
-        <div class="span2"></div>
+        <%--<div class="span1"></div>--%>
     </div>
 </div>
 </body>

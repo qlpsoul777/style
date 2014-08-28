@@ -48,8 +48,8 @@
 <body>
 <div class="container-fluid">
     <div class="row-fluid">
-        <div class="span1"></div>
-        <div class="span10">
+        <%--<div class="span1"></div>--%>
+        <div class="span12">
             <div>
                 <h3>修改用户</h3>
             </div>
@@ -179,7 +179,7 @@
                 </table>
             </form>
         </div>
-        <div class="span1"></div>
+        <%--<div class="span1"></div>--%>
     </div>
 </div>
 </body>

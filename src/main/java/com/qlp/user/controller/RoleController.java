@@ -7,9 +7,11 @@ import com.qlp.user.dto.Functions_;
 import com.qlp.user.entity.Application;
 import com.qlp.user.entity.Functions;
 import com.qlp.user.entity.Role;
+import com.qlp.user.entity.User;
 import com.qlp.user.service.ApplicationService;
 import com.qlp.user.service.FunctionService;
 import com.qlp.user.service.RoleService;
+import com.qlp.user.service.UserService;
 import com.qlp.utils.ParameterUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +39,16 @@ public class RoleController {
     private RoleService roleService;
     private ApplicationService applicationService;
     private FunctionService functionService;
+    private UserService userService;
 
     @Autowired
     public void setApplicationService(ApplicationService applicationService) {
         this.applicationService = applicationService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @Autowired
@@ -295,4 +303,58 @@ public class RoleController {
         roleService.save(r);
         return "redirect:/role/roleList";
     }
+
+    /**
+     * 用户组角色列表
+     * @param request
+     * @param pageable
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "userGroupList", method = RequestMethod.GET)
+    public String userGroupList(HttpServletRequest request, @PageableDefaults(10) Pageable pageable,
+                           Model model) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String roleName = request.getParameter("roleName");
+        if (StringUtils.isNotBlank(roleName)) {
+            map.put("name_li", roleName);
+        }
+        String roleType = request.getParameter("roleType");
+        if (StringUtils.isNotBlank(roleType)) {
+            map.put("type", roleType);
+        }
+        Page<Role> pageInfo = roleService.findPageByMap(map, pageable);
+        model.addAttribute("roleName", roleName);
+        model.addAttribute("roleType", roleType);
+        model.addAttribute("pageInfo", pageInfo);
+        return "/style/userGroup/list";
+    }
+
+    @RequestMapping(value = "userGroupInfo", method = RequestMethod.GET)
+    public String userGroupInfo(HttpServletRequest request, Model model) {
+        String id = request.getParameter("id");
+        Role role = roleService.get(id);
+        model.addAttribute("role", role);
+//      List<User> users =  userService.findByRoleId(id); //通过Criteria查询
+        List<User> users = role.getMembers();//直接通过角色获取成员
+        model.addAttribute("users", users);
+        return "/style/userGroup/info";
+    }
+
+    @RequestMapping(value = "selectUser", method = RequestMethod.GET)
+    public String selectUser(HttpServletRequest request, Model model) {
+        String id = request.getParameter("id");
+        Role role = roleService.get(id);
+        model.addAttribute("role", role);
+        List<User> users = role.getMembers();
+        model.addAttribute("users", users);//已选用户
+        Map<String,Object> map = new HashMap<>();
+        map.put("roles.id_ne",id);
+        List<User> noSelectedUsers = userService.findByMap(map);
+        noSelectedUsers.removeAll(users);
+        model.addAttribute("noSelectedUsers", noSelectedUsers);
+        return "/style/userGroup/selectUser";
+    }
+
+
 }
