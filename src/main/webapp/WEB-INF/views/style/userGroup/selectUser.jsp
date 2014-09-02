@@ -22,7 +22,6 @@
     <script src="${ctx}/static/js/bootstrap.js"></script>
     <script src="${ctx}/static/js/selected/doubleSelect.js"></script>
     <script type="text/javascript">
-        //回显用户的角色名
         $(function () {
 
         });
@@ -33,8 +32,9 @@
     <div class="row-fluid">
         <%--<div class="span1"></div>--%>
         <div class="span12">
-            <form id="createForm" action="${ctx}/user/index/updateSave?id=${user.id}" method="post"
+            <form id="createForm" action="${ctx}/role/saveGroup" method="post"
                   class="form-horizontal">
+                <input type="hidden" name="roleId" value="${role.id}"/>
                 <div id="d1">
                     <div id="d2">选择用户</div>
                     <div id="d3">

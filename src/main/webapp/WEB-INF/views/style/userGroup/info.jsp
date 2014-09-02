@@ -15,7 +15,17 @@
     <script src="${ctx}/static/js/bootstrap.js"></script>
     <script type="text/javascript">
         $(function() {
-
+            $('#agreeSelect').on('click',function(){
+                var array = new Array();
+                var a = $(window.frames["myIframe"].document).find("#s2 option");
+                $(a).each(function(){
+                    var val = $(this).val();
+                    array.push(val);
+                });
+                $('#userIds').val(array);
+                alert(array);
+                window.close();
+            });
         });
     </script>
 </head>
@@ -28,7 +38,7 @@
                 <h3>用户组详情</h3>
             </div>
             <form id="createForm" action="" method="post" class="form-horizontal">
-
+                <input type="hidden" id="userIds" name="userIds" value=""/>
                 <div class="toolbar">
                     <ul>
                         <li>
@@ -124,7 +134,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-                    <button class="btn btn-primary">确定</button>
+                    <button class="btn btn-primary" id="agreeSelect">确定</button>
                 </div>
             </div>
        <%-- <div class="span1"></div>--%>
