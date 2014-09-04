@@ -4,6 +4,7 @@ import com.qlp.user.dao.UserDao;
 import com.qlp.user.entity.User;
 import com.qlp.user.service.UserService;
 import com.qlp.utils.ParameterUtils;
+import com.qlp.utils.PasswordHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -62,6 +63,44 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional(readOnly = false)
     public User save(User user) {
+        return userDao.saveAndFlush(user);
+    }
+
+    /**
+     * 新增用户
+     *
+     * @param user
+     * @return
+     */
+    public User createUser(User user) {
+        String[] pwdAndSalt = PasswordHelper.encryptPassword(user.getLoginName(),user.getPassword());
+        user.setPassword(pwdAndSalt[0]);
+        user.setSalt(pwdAndSalt[1]);
+        return userDao.saveAndFlush(user);
+    }
+
+    /**
+     * 修改用户基本信息
+     *
+     * @param user
+     * @return
+     */
+    public User updateUser(User user) {
+        return userDao.saveAndFlush(user);
+    }
+
+    /**
+     * 修改用户的密码
+     *
+     * @param userId
+     * @param password
+     * @return
+     */
+    public User updateUserPassword(String userId, String password) {
+        User user  = userDao.findOne(userId);
+        String[] pwdAndSalt = PasswordHelper.encryptPassword(user.getLoginName(),password);
+        user.setPassword(pwdAndSalt[0]);
+        user.setSalt(pwdAndSalt[1]);
         return userDao.saveAndFlush(user);
     }
 

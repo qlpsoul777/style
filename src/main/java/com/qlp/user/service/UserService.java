@@ -20,6 +20,28 @@ public interface UserService {
     User save(User user);
 
     /**
+     * 新增用户
+     * @param user
+     * @return
+     */
+    User createUser(User user);
+
+    /**
+     * 修改用户基本信息
+     * @param user
+     * @return
+     */
+    User updateUser(User user);
+
+    /**
+     * 修改用户的密码
+     * @param userId
+     * @param password
+     * @return
+     */
+    User updateUserPassword(String userId,String password);
+
+    /**
      * 根据登录名和密码查询用户
      *
      * @param loginName

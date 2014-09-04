@@ -28,6 +28,7 @@ public class User extends TopEntity {
     private String phoneNum;  //联系方式
     private String address;  //联系地址
     private String type;  //用户类型
+    private String salt;  //加盐值（用作加密解密用）
 
 
     private List<Role> roles = new ArrayList<Role>();
@@ -110,6 +111,14 @@ public class User extends TopEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
