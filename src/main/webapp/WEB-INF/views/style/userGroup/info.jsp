@@ -37,8 +37,9 @@
             <div>
                 <h3>用户组详情</h3>
             </div>
-            <form id="createForm" action="" method="post" class="form-horizontal">
+            <form id="createForm" action="${ctx}/role/saveUserGroup" method="post" class="form-horizontal">
                 <input type="hidden" id="userIds" name="userIds" value=""/>
+                <input type="hidden" id="roleId" name="roleId" value="${role.id}"/>
                 <div class="toolbar">
                     <ul>
                         <li>

@@ -356,5 +356,24 @@ public class RoleController {
         return "/style/userGroup/selectUser";
     }
 
+    @RequestMapping(value = "saveUserGroup", method = RequestMethod.POST)
+    public String saveUserGroup(HttpServletRequest request, Model model){
+        String id = request.getParameter("roleId");
+        Role role = roleService.get(id);
+        List<User> oldUsers = role.getMembers();
+        String[] userIds = request.getParameterValues("userIds");
+        for(String uId : userIds){
+            User user = userService.get(uId);
+            if(user!=null){
+                if(!oldUsers.contains(user)){
+                    oldUsers.add(user);
+                }
+            }
+        }
+        role.setMembers(oldUsers);
+        roleService.save(role);
+        return "/style/userGroup/selectUser";
+    }
+
 
 }
