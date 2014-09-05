@@ -49,6 +49,11 @@
         <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 
+    <!--lucene配置-->
+    <bean id="luceneBean" class="com.qlp.utils.LuceneBean" init-method="init">
+        <property name="indexPath" value="home/dataIndex"/>
+    </bean>
+
     <!-- 使用annotation定义事务 -->
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
 
