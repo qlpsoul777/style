@@ -3,6 +3,7 @@ package com.qlp.cms.service.impl;
 import com.qlp.cms.dao.ContentDao;
 import com.qlp.cms.entity.Content;
 import com.qlp.cms.service.ContentService;
+import com.qlp.utils.LuceneBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,9 @@ import java.util.Map;
 @Component
 @Transactional(readOnly = true)
 public class ContentServiceImpl implements ContentService {
+
+    @Autowired
+    private LuceneBean luceneBean;
 
     @Autowired
     private ContentDao contentDao;
