@@ -1,6 +1,7 @@
 package com.qlp.commons.orm;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Disjunction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,7 +30,11 @@ public abstract interface QlpJpaRepository<T, ID extends Serializable> extends J
 
     public abstract Page<T> queryPageByCriteria(Criteria criteria, Pageable pageable);
 
+    //and condition
     public Criteria mapToCriteria(Map<String, Object> map);
+    
+    //or condition用时将返回值放入criteria中即可
+    public Disjunction mapToDisjunction(Map<String,Object> map);
 
     public Criteria createCriteria();
 }

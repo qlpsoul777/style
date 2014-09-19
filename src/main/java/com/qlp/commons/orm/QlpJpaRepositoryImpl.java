@@ -168,4 +168,17 @@ public class QlpJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
     private Session getSession() {
         return (Session) this.em.getDelegate();
     }
+
+	public Disjunction mapToDisjunction(Map<String, Object> map) {
+		Disjunction disjunction = Restrictions.disjunction();
+		Set<Map.Entry<String, Object>> set = map.entrySet();
+		for (Map.Entry<String, Object> entry : set) {
+            Object object = entry.getValue();
+            if ((object != null) && (StringUtils.isNotEmpty(object.toString()))) {
+                Criterion criterion = entryToCriterion((String) entry.getKey(), entry.getValue());
+                disjunction.add(criterion);
+            }
+        }
+		return disjunction;
+	}
 }
