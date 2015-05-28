@@ -1,6 +1,7 @@
 package com.qlp.commons.orm;
 
-import com.qlp.commons.Reflection.ReflectionUtils;
+
+import com.qlp.utils.ReflectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -133,7 +134,7 @@ public class QlpJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
         Projection projection = impl.getProjection();
         ResultTransformer resultTransformer = impl.getResultTransformer();
         List<CriteriaImpl.OrderEntry> orderEntries = null;
-        orderEntries = (List) ReflectionUtils.getFieldValue(impl, "orderEntries");
+        orderEntries = (List)ReflectionUtils.getFieldValue(impl, "orderEntries");
         ReflectionUtils.setFieldValue(impl, "orderEntries", new ArrayList());
         //获取记录总数
         Long totalCount = (Long) c.setProjection(Projections.rowCount()).uniqueResult();

@@ -55,8 +55,8 @@ public class HtmlSplitTag extends TagSupport {
         }
         String str = sb.toString();
         if (length != null && length > 0) {
+            str = str.replaceAll("&nbsp;", "");
             if (str.length() > length) {
-                str = str.replaceAll("&nbsp;", "");
                 str = str.substring(0, length);
                 str  = str +"...";
             }

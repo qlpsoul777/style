@@ -9,15 +9,17 @@ input,button,select,textarea{outline:none}
 
 /*login*/
 .login{padding:1px 0 0 0;background:url(../images/login-bg.jpg) center top no-repeat #FFF;padding:150px 0 0 0;}
-.login input.submit{border:none;font-weight:bold;color:#FFF;margin:25px 0 0 150px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;-webkit-box-shadow: #CCC 0px 0px 5px;-moz-box-shadow: #CCC 0px 0px 5px;box-shadow: #CCC 0px 0px 5px;background: #31b6e7;cursor: pointer;}
-.login input.submit:hover{background:#ff9229;}
-.login input.submit{padding:6px 20px;}
-.login .box{position:relative;z-index:100;margin:0 auto;width:700px;height:320px;background:url(../images/login.png) center top no-repeat;}
-.login .log{position:relative;width:370px;height:260px;margin:0 auto;padding:90px 0 0 20px;}
+.login input.submit{width:70px;height:32px;border:none;font-weight:bold;color:#FFF;margin:15px 0 0 10px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;-webkit-box-shadow: #CCC 0px 0px 5px;-moz-box-shadow: #CCC 0px 0px 5px;box-shadow: #CCC 0px 0px 5px;background: #31b6e7;cursor: pointer;}
+.login input.submit:hover{background:#00B83F;}
+.login input.reset{width:70px;height:32px;border:none;font-weight:bold;color:#FFF;margin:15px 0 0 10px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;-webkit-box-shadow: #CCC 0px 0px 5px;-moz-box-shadow: #CCC 0px 0px 5px;box-shadow: #CCC 0px 0px 5px;background: #f89406;cursor: pointer;}
+.login input.reset:hover{background:#ff2222;}
+.login .box{position:relative;z-index:100;margin:0 auto;width:700px;height:350px;background:url(../images/login.png) center top no-repeat;}
+.login .log{position:relative;width:370px;height:290px;margin:0 auto;padding:90px 0 0 20px;}
 .login .logo{height:85px;position:absolute;top:15px;left:180px;background:url(../images/logo-login.png) no-repeat;width:350px;height:50px;}
 .login label{display:inline-block;width:70px;text-align:right;padding-right:20px;vertical-align:middle;}
 .login .name{padding:10px 5px;font-size:14px;}
 .login .pwd{padding:10px 5px;font-size:14px;}
+.login .captcha{padding:10px 5px;font-size:14px;}
 .login .alt{position:absolute;top:43px;left:260px;font-size:20px;}
 .login .text{filter:alpha(opacity=80);-moz-opacity:0.8;opacity:0.8;}
 .login .copyright{position:absolute;left:0;width:100%;bottom:-40px;text-align:center;color:#AAA;}

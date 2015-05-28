@@ -1,15 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="
-            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd"
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
        default-lazy-init="true">
 
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"></property>
+        <property name="loginUrl" value="/login"></property>
+        <property name="successUrl" value="/index"></property>
+        <property name="filters">
+            <map>
+                <entry key="jCaptchaValidate" value-ref="jCaptchaValidateFilter"/>
+                <entry key="authc" value-ref="authcFilter"/>
+            </map>
+        </property>
+        <property name="filterChainDefinitions">
+            <value>
+                /static/** = anon
+                /jcaptcha* = anon
+                /login = jCaptchaValidate,authc
+            </value>
+        </property>
+    </bean>
 
-    <!-- 用户授权信息Cache, 采用EhCache -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="shiroDatabaseRealm" />
+        <property name="cacheManager" ref="shiroEhcacheManager" />
+    </bean>
+
+    <bean id="shiroDatabaseRealm" class="com.qlp.sys.service.impl.CustomRealm" depends-on="userDao,roleDao,moduleDao">
+        <property name="credentialsMatcher" ref="passwordMatcher"></property>
+    </bean>
+
     <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
         <property name="cacheManagerConfigFile" value="classpath:ehcache/ehcache-shiro.xml"/>
+    </bean>
+
+    <bean id="passwordMatcher" class="com.qlp.sys.service.impl.RetryPasswordCount" init-method="init">
+        <property name="limit" value="5"></property>
+        <property name="hashAlgorithmName" value="md5"></property>
+        <property name="hashIterations" value="2"></property>
+        <property name="storedCredentialsHexEncoded" value="true"/>
+    </bean>
+
+    <bean id="authcFilter" class="com.qlp.sys.service.impl.MyFormAuthenticationFilter">
+        <property name="usernameParam" value="username"/>
+        <property name="passwordParam" value="password"/>
+        <property name="rememberMeParam" value="rememberMe"/>
+        <property name="failureKeyAttribute" value="shiroLoginFailure"/>
+    </bean>
+    <bean id="jCaptchaValidateFilter" class="com.qlp.sys.service.impl.JCaptchaValidateFilter">
+        <property name="jCaptchaEbabled" value="true"/>
+        <property name="jCaptchaParam" value="jCaptchaCode"/>
+        <property name="failureKeyAttribute" value="shiroLoginFailure"/>
     </bean>
 
     <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->

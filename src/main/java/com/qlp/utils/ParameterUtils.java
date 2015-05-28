@@ -16,6 +16,8 @@ public class ParameterUtils {
     public static final String OUTER = "OUTER";//外部用户
 
     public static final String INITPASSWORD = "88888888";//内部用户初始密码
+    public static final String ROOT = "root";//超级用户登录名
+    public static final String[] ROOT_ACCOUNT ={"4cb9047c96d22ed17d15b5411456b414","01c992c0fba2e608b23dc14779c075d8"};
 
     public static final String IMG = "1";//图片
     public static final String OFFICE = "2";//office文档
