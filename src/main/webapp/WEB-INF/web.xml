@@ -74,7 +74,7 @@
         <filter-name>JCaptchaFilter</filter-name>
         <url-pattern>/jcaptcha.jpg</url-pattern>
     </filter-mapping>
-
+	
 
 
     <context-param>

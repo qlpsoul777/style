@@ -70,7 +70,7 @@ public class ReflectionUtils {
      * @return
      */
     public static Object getFieldValue(Object obj, String fieldName) {
-        Class clazz = obj.getClass();
+        Class<?> clazz = obj.getClass();
         Field field = findField(clazz,fieldName);
         makeAccessible(field);
         Object fieldValue = getField(field,obj);
@@ -85,7 +85,7 @@ public class ReflectionUtils {
      * @param fieldValue
      */
     public static void setFieldValue(Object obj, String fieldName, Object fieldValue) {
-        Class clazz = obj.getClass();
+        Class<?> clazz = obj.getClass();
         Field field = findField(clazz, fieldName);
         makeAccessible(field);
         setField(field, obj, fieldValue);

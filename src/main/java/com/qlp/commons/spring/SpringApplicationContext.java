@@ -12,7 +12,8 @@ import org.springframework.stereotype.Repository;
 public class SpringApplicationContext implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
 
-    public void setApplicationContext(ApplicationContext applicationContext)
+    @SuppressWarnings("static-access")
+	public void setApplicationContext(ApplicationContext applicationContext)
             throws BeansException
     {
         this.applicationContext = applicationContext;

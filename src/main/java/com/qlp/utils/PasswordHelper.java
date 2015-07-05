@@ -17,4 +17,8 @@ public final class PasswordHelper {
         String newWord = new SimpleHash("MD5",password, ByteSource.Util.bytes(loginName + salt),hashIterations).toHex();
         return new String[]{newWord,salt};
     }
+    
+    public static void main(String[] args) {
+		System.out.println(encryptPassword("root", "123456")[1]);
+	}
 }

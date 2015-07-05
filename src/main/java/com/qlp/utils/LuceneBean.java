@@ -132,7 +132,7 @@ public class LuceneBean {
 
     //分页查询结果
     public Page<Map<String,String>> search(Query query,Pageable pageable){
-        Page page = null;
+        Page<Map<String, String>> page = null;
         IndexReader reader = null;
         try {
             reader = DirectoryReader.open(this.directory);
@@ -140,11 +140,11 @@ public class LuceneBean {
             TopDocs results = searcher.search(query, pageable.getOffset() + pageable.getPageSize());
             ScoreDoc[] hits = results.scoreDocs;
             int numTotalHits = results.totalHits;
-            List list = new ArrayList();
+            List<Map<String, String>> list = new ArrayList<Map<String, String>>();
             for (int i = pageable.getOffset(); i < Math.min(pageable.getOffset() + pageable.getPageSize(), hits.length); i++) {
                 Document document = searcher.doc(hits[i].doc);
                 List<IndexableField> indexableFields = document.getFields();
-                Map record = new HashMap();
+                Map<String, String> record = new HashMap<String, String>();
                 for (IndexableField indexableField : indexableFields) {
                     String name = indexableField.name();
                     String value = indexableField.stringValue();
@@ -158,7 +158,7 @@ public class LuceneBean {
                 }
                 list.add(record);
             }
-            page = new PageImpl(list, pageable, numTotalHits);
+            page = new PageImpl<Map<String, String>>(list, pageable, numTotalHits);
         } catch (IOException e) {
             logger.error("搜索失败",e.getMessage());
         }finally {

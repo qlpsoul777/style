@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.qlp.utils.SecurityUtil;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -26,7 +28,7 @@ public class SystemController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(HttpServletRequest request,Model model){
+    public String loginning(HttpServletRequest request,Model model){
         String msg = "";//登录提示信息
         String errorClassName = (String)request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
         if("jCaptcha.error".equals(errorClassName)){
@@ -44,8 +46,10 @@ public class SystemController {
         return "/style/system/backstage/login";
     }
 
-    public String index(){
-
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index(HttpServletRequest request,Model model){
+    	String loginName = SecurityUtil.getCurrentUserLoginName();
+    	model.addAttribute("name",loginName);
         return "/style/system/backstage/index";
     }
 }

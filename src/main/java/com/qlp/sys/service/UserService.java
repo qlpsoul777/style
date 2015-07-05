@@ -37,6 +37,19 @@ public interface UserService {
      * @return
      */
     Set<String> findModulesByLoginName(String loginName);
-
+    
+    /**
+     * 保存用户信息
+     * @param user
+     * @return
+     */
     User save(User user);
+
+    /**
+     * 创建用户
+     * @param user
+     * @param password
+     * @return
+     */
+    User createUser(User user,String password);
 }

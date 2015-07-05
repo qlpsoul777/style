@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +92,8 @@ public class JsonMapper {
      *
      * @see #createCollectionType(Class, Class...)
      */
-    public <T> T fromJson(String jsonString, JavaType javaType) {
+    @SuppressWarnings("unchecked")
+	public <T> T fromJson(String jsonString, JavaType javaType) {
         if (StringUtils.isEmpty(jsonString)) {
             return null;
         }
@@ -115,7 +117,8 @@ public class JsonMapper {
     /**
      * 當JSON裡只含有Bean的部分屬性時，更新一個已存在Bean，只覆蓋該部分的屬性.
      */
-    public <T> T update(String jsonString, T object) {
+    @SuppressWarnings("unchecked")
+	public <T> T update(String jsonString, T object) {
         try {
             return (T) objectMapper.readerForUpdating(object).readValue(jsonString);
         } catch (JsonProcessingException e) {

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+
 import java.io.IOException;
 
 /**
@@ -15,7 +16,8 @@ import java.io.IOException;
  */
 public class PageTag extends TagSupport {
 
-    private static Logger logger = LoggerFactory.getLogger(PageTag.class);
+	private static final long serialVersionUID = 1L;
+	private static Logger logger = LoggerFactory.getLogger(PageTag.class);
     private Page<Object> page;  //分页对象
     private StringBuilder html;  //输出的HTML内容
     private String formId;  //表单id
@@ -45,7 +47,8 @@ public class PageTag extends TagSupport {
         this.formId = formId;
     }
 
-    public int doEndTag() throws JspException {
+    @SuppressWarnings("static-access")
+	public int doEndTag() throws JspException {
         this.html = new StringBuilder();
         if (this.page.getContent().isEmpty()) {
             return super.EVAL_PAGE;

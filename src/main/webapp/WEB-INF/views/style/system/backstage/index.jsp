@@ -35,7 +35,7 @@
                         <li><a href="javascript:void(0)" target="_top">退出登录</a></li>
                     </ul>
                 </div>
-                <div class="admin">${user.name}，您好，今天是${currentTime}</div>
+                <div class="admin">${name}，您好，今天是<span id="currentTime"></span></div>
             </div>
         </div>
     </div>
@@ -63,7 +63,7 @@
                      bottom: 0px; height: 533px; width: 1167px; z-index: 0; display:
                       block; visibility: visible; padding-left:0px; background-color:#FFFFFF"></iframe>
             <!--位置及导航-->
-           <%-- <div id="NavBox">
+           <div id="NavBox">
                 <div class="location">当前位置：古风后台管理系统 >>> 首页</div>
                 <!--menu-->
                 <ul class="menu">
@@ -71,7 +71,7 @@
                     <li><a href="#">高级管理</a></li>
                 </ul>
                 <!--/menu-->
-            </div>--%>
+            </div>
 
         </div>
     </div>

@@ -7,6 +7,7 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
 import javax.persistence.EntityManager;
+
 import java.io.Serializable;
 
 /**
@@ -14,7 +15,9 @@ import java.io.Serializable;
  *
  */
 public class QlpRepositoryFactoryBean<R extends JpaRepository<T,I>,T,I extends Serializable> extends JpaRepositoryFactoryBean<R,T,I>{
-    protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager)
+    
+	@SuppressWarnings("rawtypes")
+	protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager)
     {
         return new DynamicQueryRepositoryFactory(entityManager);
     }
@@ -27,7 +30,8 @@ public class QlpRepositoryFactoryBean<R extends JpaRepository<T,I>,T,I extends S
             this.entityManager = entityManager;
         }
 
-        protected Object getTargetRepository(RepositoryMetadata metadata)
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+		protected Object getTargetRepository(RepositoryMetadata metadata)
         {
             return new QlpJpaRepositoryImpl(metadata.getDomainType(),this.entityManager);
         }
