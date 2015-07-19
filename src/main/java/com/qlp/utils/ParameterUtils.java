@@ -18,7 +18,8 @@ public class ParameterUtils {
     public static final String INITPASSWORD = "88888888";//内部用户初始密码
     public static final String ROOT = "root";//超级用户登录名
     public static final String[] ROOT_ACCOUNT ={"aeeaa849d945f2e80a5ba468672edc54","21a5cb0e348522d2b9e77bf5e32688a2"};
-
+    public static final String ROOT_EMAIL = "superman@163.com";//超级用户邮箱
+    
     public static final String IMG = "1";//图片
     public static final String OFFICE = "2";//office文档
     public static final String PDF = "3";//pdf

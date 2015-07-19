@@ -9,6 +9,6 @@ public enum Gender {
 	
 	MAN,  //男
 	WOMAN,  //女
-	UNKNOWN;  //未知
+	UNKNOWN;  //未知(保密)
 
 }

@@ -1,12 +1,17 @@
 package com.qlp.sys.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 
-import com.qlp.commons.enums.Type;
-import com.qlp.commons.enums.UserStatus;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -21,12 +26,10 @@ import com.qlp.commons.entity.TopEntity;
 public class Role extends TopEntity {
 
     private String name;  //角色名称
-    private UserStatus status = UserStatus.ENABLE;  //是否启用，默认为启用该角色
-    private Type type;  //角色类型，默认为内部角色
+    private boolean enable = Boolean.TRUE;  //是否启用，默认为启用该角色
     private String description;  //角色描述
-
-    private List<User> members = new ArrayList<User>();  //角色下的用户
-    private List<Module> modules = new ArrayList<Module>();  //角色拥有的模块权限
+    private List<User> members;  //角色下的用户
+    private List<Module> modules;  //角色拥有的模块权限
 
     @Column(length = 30)
     public String getName() {
@@ -37,26 +40,15 @@ public class Role extends TopEntity {
         this.name = name;
     }
 
-    @Enumerated(value = EnumType.ORDINAL)
-    public UserStatus getStatus() {
-        return status;
-    }
+    public boolean isEnable() {
+		return enable;
+	}
 
-    public void setStatus(UserStatus status) {
-        this.status = status;
-    }
+	public void setEnable(boolean enable) {
+		this.enable = enable;
+	}
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(length = 6,nullable = false)
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    @Column(length = 50)
+    @Column(length = 150)
     public String getDescription() {
         return description;
     }

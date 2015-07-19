@@ -3,7 +3,11 @@ package com.qlp.sys.service;
 
 import com.qlp.sys.entity.User;
 
+import java.util.Map;
 import java.util.Set;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Created by qlp on 14-4-3.
@@ -52,4 +56,10 @@ public interface UserService {
      * @return
      */
     User createUser(User user,String password);
+
+	Page<User> findPageByCriteria(Map<String, Object> map, Pageable pageable);
+
+	boolean repeatLoginName(String loginName);
+
+	void setRoles(User user, String roleIds);
 }

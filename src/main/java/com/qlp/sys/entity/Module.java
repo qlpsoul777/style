@@ -1,12 +1,23 @@
 package com.qlp.sys.entity;
 
-import com.qlp.commons.entity.TopEntity;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by qlp on 2014/12/15.
@@ -14,23 +25,32 @@ import java.util.List;
  */
 @Entity
 @Table(name = "com_qlp_sys_module")
-public class Module extends TopEntity{
+public class Module{
 
+	private Long id;  //主键
     private String name;   //模块名
     private String permission;  //权限关键字
     private String url;  //链接地址
     private String description;  //描述
-
-    private int sort;  //排序字段
-
+    private Integer sort;  //排序字段
+    private Integer level;  //层级
     private boolean display = Boolean.TRUE;  //是否可见
     private boolean enable = Boolean.TRUE;  //是否启用
-
     private Module parent;  //  父模块
+    private List<Module> children;  //子模块
+    private List<Role> roles;  //角色
 
-    private List<Module> children = new ArrayList<Module>();  //子模块
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    public Long getId() {
+		return id;
+	}
 
-    @Column(length = 30)
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Column(length = 30)
     public String getName() {
         return name;
     }
@@ -48,7 +68,7 @@ public class Module extends TopEntity{
         this.permission = permission;
     }
 
-    @Column(length = 30)
+    @Column(length = 150)
     public String getUrl() {
         return url;
     }
@@ -57,7 +77,7 @@ public class Module extends TopEntity{
         this.url = url;
     }
 
-    @Column(length = 50)
+    @Column(length = 150)
     public String getDescription() {
         return description;
     }
@@ -66,15 +86,24 @@ public class Module extends TopEntity{
         this.description = description;
     }
 
-    public int getSort() {
+    public Integer getSort() {
         return sort;
     }
 
-    public void setSort(int sort) {
-        this.sort = sort;
-    }
+    public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+    
+    @Column(length=1)
+    public Integer getLevel() {
+		return level;
+	}
 
-    public boolean isDisplay() {
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
+
+	public boolean isDisplay() {
         return display;
     }
 
@@ -110,4 +139,17 @@ public class Module extends TopEntity{
     public void setChildren(List<Module> children) {
         this.children = children;
     }
+
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "modules")
+    @Fetch(FetchMode.SUBSELECT)
+    @OrderBy("sort")
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+    
+    
 }

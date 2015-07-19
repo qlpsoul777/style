@@ -14,7 +14,7 @@ function airBalloon(balloon){
 		fly(this);
 	});	
 	$(window).resize(function(){
-		resize()
+		resize();
 		$(balloon).each(function(){
 			$(this).stop().animate({top: rand(40, viewHeight * 0.5 ) , left : rand( 10 , viewWidth - $(this).width() ) } ,1000 , function(){
 				fly(this);

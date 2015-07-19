@@ -1,19 +1,29 @@
 package com.qlp.sys.entity;
 
-import com.qlp.commons.entity.TopEntity;
+import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-import com.qlp.commons.enums.Gender;
-import com.qlp.commons.enums.Type;
-import com.qlp.commons.enums.UserStatus;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.*;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.qlp.commons.entity.TopEntity;
+import com.qlp.commons.enums.Gender;
+import com.qlp.commons.enums.Type;
+import com.qlp.commons.enums.UserStatus;
 
 /**
  * Created by qlp on 14-4-2.
@@ -28,15 +38,14 @@ public class User extends TopEntity {
     private String name;  //真实姓名
     private Date birthday;  //出身日期
     private UserStatus status = UserStatus.ENABLE;  //是否启用账号默认为启用状态
-    private Gender sex = Gender.MAN;  //性别
+    private Integer sex = Gender.UNKNOWN.ordinal();  //性别
     private String email;  //邮箱地址
     private String phoneNum;  //联系方式
     private String address;  //联系地址
+    private String imgPath;  //头像地址
     private Type type;  //用户类型
     private String salt;  //加盐值（用作加密解密用）
-
-
-    private List<Role> roles = new ArrayList<>();
+    private List<Role> roles;
 
     @Column(unique = true, nullable = false,length = 30)
     public String getLoginName() {
@@ -73,7 +82,8 @@ public class User extends TopEntity {
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
-
+    
+    @Column(length = 1,nullable = false)
     @Enumerated(value = EnumType.ORDINAL)
     public UserStatus getStatus() {
         return status;
@@ -83,17 +93,16 @@ public class User extends TopEntity {
         this.status = status;
     }
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(length = 5,nullable = false)
-    public Gender getSex() {
-        return sex;
-    }
+    @Column(length = 1,nullable = false)
+    public Integer getSex() {
+		return sex;
+	}
 
-    public void setSex(Gender sex) {
-        this.sex = sex;
-    }
+	public void setSex(Integer sex) {
+		this.sex = sex;
+	}
 
-    @Column(length = 30)
+	@Column(length = 50)
     public String getEmail() {
         return email;
     }
@@ -111,7 +120,7 @@ public class User extends TopEntity {
         this.phoneNum = phoneNum;
     }
 
-    @Column(length = 50)
+    @Column(length = 150)
     public String getAddress() {
         return address;
     }
@@ -121,7 +130,7 @@ public class User extends TopEntity {
     }
 
     @Enumerated(value = EnumType.STRING)
-    @Column(length = 6,nullable = false)
+    @Column(length = 15,nullable = false)
     public Type getType() {
         return type;
     }
@@ -138,8 +147,17 @@ public class User extends TopEntity {
     public void setSalt(String salt) {
         this.salt = salt;
     }
+    
+    @Column(length = 150)
+    public String getImgPath() {
+		return imgPath;
+	}
 
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
+	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinTable(name = "com_qlp_sys_user_role", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("name")
@@ -150,5 +168,14 @@ public class User extends TopEntity {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
+    
+    public User(){}
+
+	public User(String loginName, String name, String email) {
+		super();
+		this.loginName = loginName;
+		this.name = name;
+		this.email = email;
+	}
 
 }

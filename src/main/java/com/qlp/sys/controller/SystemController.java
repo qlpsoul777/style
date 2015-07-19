@@ -1,15 +1,24 @@
 package com.qlp.sys.controller;
 
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.qlp.sys.entity.Module;
+import com.qlp.sys.entity.User;
+import com.qlp.sys.service.ModuleService;
+import com.qlp.sys.service.UserService;
+import com.qlp.utils.ParameterUtils;
 import com.qlp.utils.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +29,12 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping(value = "/platform")
 public class SystemController {
+	
+	@Autowired
+	private ModuleService moduleService;
+	
+	@Autowired
+	private UserService userService;
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String first(){
@@ -49,7 +64,15 @@ public class SystemController {
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index(HttpServletRequest request,Model model){
     	String loginName = SecurityUtil.getCurrentUserLoginName();
-    	model.addAttribute("name",loginName);
+    	User user = null;
+    	if(StringUtils.equals(ParameterUtils.ROOT, loginName)){
+    		user = new User(ParameterUtils.ROOT,ParameterUtils.ROOT,ParameterUtils.ROOT_EMAIL);
+    	}else{
+    		user = userService.findByLoginName(loginName);
+    	}
+    	List<Module> menus = moduleService.queryMenuByLoginName(loginName);
+    	model.addAttribute("menus", menus);
+    	model.addAttribute("user",user);
         return "/style/system/backstage/index";
     }
 }

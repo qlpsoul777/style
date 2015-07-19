@@ -1,14 +1,19 @@
 package com.qlp.sys.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggerFactory;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,7 +78,7 @@ public class UserServiceImpl implements UserService {
             user.setType(Type.SUPER);
             return user;
         }
-        return userDao.findOneByLoginNameOrEmail(loginName);
+        return userDao.findByLoginName(loginName);
     }
 
     /**
@@ -89,7 +94,7 @@ public class UserServiceImpl implements UserService {
         if(isRootUser(loginName)){
             roles = roleDao.findAll();
         }else{
-            User user = userDao.findOneByLoginNameOrEmail(loginName);
+            User user = userDao.findByLoginName(loginName);
             roles = user.getRoles();
         }
         for (Role r : roles){
@@ -111,7 +116,7 @@ public class UserServiceImpl implements UserService {
         if(isRootUser(loginName)){
             modules.addAll(moduleDao.findAll());
         }else{
-            User user = userDao.findOneByLoginNameOrEmail(loginName);
+            User user = userDao.findByLoginName(loginName);
             List<Role> roles = user.getRoles();
             for (Role r : roles){
                 modules.addAll(r.getModules());
@@ -138,5 +143,50 @@ public class UserServiceImpl implements UserService {
 		}
 		logger.error("%s:"+ "用户已存在");
 		return null;
+	}
+
+    public Page<User> findPageByCriteria(Map<String, Object> map, Pageable pageable) {
+        Map<String, Object> searchMap = new HashMap<String, Object>();
+        String userName = (String) map.get("userName");
+        String roleName = (String) map.get("roleName");
+        Type type = (Type) map.get("type");
+        if (StringUtils.isNotBlank(userName)) {
+            searchMap.put("name_li", userName);
+        }
+        searchMap.put("type", type);
+        Criteria criteria = userDao.mapToCriteria(searchMap);
+        if (StringUtils.isNotBlank(roleName)) {
+            criteria.createAlias("roles", "r")
+                    .add(Restrictions.eq("r.name", roleName))
+                    .add(Restrictions.eq("r.enable", Boolean.TRUE));
+        }
+        return userDao.queryPageByCriteria(criteria, pageable);
+    }
+
+	public boolean repeatLoginName(String loginName) {
+		User user = findByLoginName(loginName);
+		if(user != null){
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public void setRoles(User user, String roleIds) {
+		if(StringUtils.isNotBlank(roleIds)){
+			String[] ids = StringUtils.split(roleIds, ",");
+			List<Role> roles = new ArrayList<Role>(ids.length);
+			Role r = null;
+			for (String id : ids) {
+				r = roleDao.findOne(id);
+				if(r!= null){
+					roles.add(r);
+				}
+			}
+			user.setRoles(roles);
+		}else{
+			logger.debug("%s:"+ "未选择任何角色");
+		}
+		
 	}
 }
