@@ -78,6 +78,13 @@ public class UserController {
 		return "redirect:/user/list/INNER";
 	}
 	
+	@RequestMapping(value = "/batchDelete", method = RequestMethod.GET)
+	public String batchDelete(HttpServletRequest request){
+		String userIds = request.getParameter("ids");
+		userService.batchDelete(userIds);
+		return "redirect:/user/list/INNER";
+	}
+	
 	@RequestMapping(value = "/repeatLoginName", method = RequestMethod.GET)
 	@ResponseBody
 	public String repeatLoginName(HttpServletRequest request){

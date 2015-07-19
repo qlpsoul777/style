@@ -3,6 +3,7 @@ package com.qlp.sys.service;
 
 import com.qlp.sys.entity.User;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -57,9 +58,38 @@ public interface UserService {
      */
     User createUser(User user,String password);
 
+    /**
+     * 分页查询用户信息
+     * @param map
+     * @param pageable
+     * @return
+     */
 	Page<User> findPageByCriteria(Map<String, Object> map, Pageable pageable);
 
+	/**
+	 * 验证登录名是否重复
+	 * @param loginName
+	 * @return
+	 */
 	boolean repeatLoginName(String loginName);
 
+	/**
+	 * 设置角色
+	 * @param user
+	 * @param roleIds
+	 */
 	void setRoles(User user, String roleIds);
+
+	/**
+	 * 批量删除内部用户
+	 * @param userIds
+	 */
+	void batchDelete(String userIds);
+	
+	/**
+	 * 根据用户id集合查询用户
+	 * @param ids
+	 * @return
+	 */
+	List<User> findByIds(String ids);
 }

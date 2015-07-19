@@ -1,6 +1,7 @@
 package com.qlp.sys.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +26,7 @@ import com.qlp.sys.dao.UserDao;
 import com.qlp.sys.entity.Module;
 import com.qlp.sys.entity.Role;
 import com.qlp.sys.entity.User;
+import com.qlp.sys.service.RoleService;
 import com.qlp.sys.service.UserService;
 import com.qlp.utils.ParameterUtils;
 import com.qlp.utils.PasswordHelper;
@@ -40,12 +42,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
-
     @Autowired
     private RoleDao roleDao;
-
     @Autowired
     private ModuleDao moduleDao;
+    @Autowired
+    private RoleService roleService;
 
     /**
      * 判断登录用户是不是root用户(方便开发测试用，上线后请禁用掉root用户)
@@ -171,22 +173,30 @@ public class UserServiceImpl implements UserService {
 		return true;
 	}
 
-	@Override
 	public void setRoles(User user, String roleIds) {
-		if(StringUtils.isNotBlank(roleIds)){
-			String[] ids = StringUtils.split(roleIds, ",");
-			List<Role> roles = new ArrayList<Role>(ids.length);
-			Role r = null;
-			for (String id : ids) {
-				r = roleDao.findOne(id);
-				if(r!= null){
-					roles.add(r);
-				}
-			}
+		List<Role> roles = roleService.findByIds(roleIds);
+		if((roles != null) && (!roles.isEmpty())){
 			user.setRoles(roles);
-		}else{
-			logger.debug("%s:"+ "未选择任何角色");
+		}	
+	}
+
+	@Transactional(readOnly=false)
+	public void batchDelete(String userIds) {
+		List<User> users = findByIds(userIds);
+		if((users !=null) && (!users.isEmpty())){
+			userDao.delete(users);
 		}
-		
+	}
+
+	@Override
+	public List<User> findByIds(String userIds) {
+		List<User> users = null;
+		if(StringUtils.isNotBlank(userIds)){
+			String[] ids = StringUtils.split(userIds, ",");
+			users = (List<User>) userDao.findAll(Arrays.asList(ids));
+		}else{
+			logger.debug("%s:"+ "未选择任何用户");
+		}
+		return users;
 	}
 }

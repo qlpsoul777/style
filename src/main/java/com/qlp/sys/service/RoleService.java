@@ -9,6 +9,17 @@ import com.qlp.sys.entity.Role;
  */
 public interface RoleService {
 
+	/**
+	 * 查询所有可用角色
+	 * @return
+	 */
 	List<Role> queryAllUsingRoles();
+	
+	/**
+	 * 根据角色id集合查询角色集合
+	 * @param roleIds
+	 * @return
+	 */
+	List<Role> findByIds(String roleIds);
 
 }

@@ -1,7 +1,9 @@
 package com.qlp.sys.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,17 @@ public class RoleServiceImpl implements RoleService {
 	
 	public List<Role> queryAllUsingRoles() {
 		return roleDao.findAllUsingRoles();
+	}
+
+	public List<Role> findByIds(String roleIds) {
+		List<Role> roles = null;
+		if(StringUtils.isNotBlank(roleIds)){
+			String[] ids = StringUtils.split(roleIds, ",");
+			roles = (List<Role>) roleDao.findAll(Arrays.asList(ids));
+		}else{
+			logger.debug("%s:"+ "未选择任何角色");
+		}
+		return roles;
 	}
 
 
