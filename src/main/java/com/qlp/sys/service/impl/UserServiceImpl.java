@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.qlp.commons.entity.MsgInfo;
 import com.qlp.commons.enums.Type;
 import com.qlp.commons.enums.UserStatus;
 import com.qlp.sys.dao.ModuleDao;
@@ -138,7 +139,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly=false)
 	public User createUser(User user, String password) {
 		if(StringUtils.isBlank(user.getId())){
-			String[] pwdAndSalt = PasswordHelper.encryptPassword(user.getLoginName(), password);
+			String[] pwdAndSalt = PasswordHelper.encryptPassword(user, password,true);
 			user.setPassword(pwdAndSalt[0]);
 			user.setSalt(pwdAndSalt[1]);
 			return this.userDao.saveAndFlush(user);
@@ -188,7 +189,6 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	@Override
 	public List<User> findByIds(String userIds) {
 		List<User> users = null;
 		if(StringUtils.isNotBlank(userIds)){
@@ -198,5 +198,58 @@ public class UserServiceImpl implements UserService {
 			logger.debug("%s:"+ "未选择任何用户");
 		}
 		return users;
+	}
+
+	@Transactional(readOnly=false)
+	public void batchEdit(String userIds) {
+		List<User> users = findByIds(userIds);
+		if((users !=null) && (!users.isEmpty())){
+			for (User user : users) {
+				switch(user.getStatus()){
+				case ENABLE:
+					user.setStatus(UserStatus.NOTENABLE);
+					break;
+				case NOTENABLE:
+					user.setStatus(UserStatus.ENABLE);
+					break;
+				default:
+					break;
+				}
+				userDao.saveAndFlush(user);
+			}
+		}
+	}
+
+	@Transactional(readOnly=false)
+	public void batchResetPwd(String userIds) {
+		List<User> users = findByIds(userIds);
+		if((users !=null) && (!users.isEmpty())){
+			for (User user : users) {
+				String[] pwdAndSalt = PasswordHelper.encryptPassword(user, ParameterUtils.INITPASSWORD,true);
+				user.setPassword(pwdAndSalt[0]);
+				user.setSalt(pwdAndSalt[1]);
+				userDao.saveAndFlush(user);
+			}
+		}
+	}
+
+	public User findById(String userIds) {
+		return userDao.findOne(userIds);
+	}
+
+	public MsgInfo updatePwd(User user, String oldPwd, String newPwd,
+			String repeatNewPwd) {
+		String oldPwdEncrypted = PasswordHelper.encryptPassword(user,oldPwd,false)[0];
+		if(!StringUtils.equals(user.getPassword(), oldPwdEncrypted)){
+			return new MsgInfo(-1,"原始密码输入错误");
+		}
+		if(!StringUtils.equals(newPwd, repeatNewPwd)){
+			return  new MsgInfo(-2,"新密码两次输入不一致");
+		}
+		String[] pwdAndSalt = PasswordHelper.encryptPassword(user,newPwd,true);
+		user.setPassword(pwdAndSalt[0]);
+		user.setSalt(pwdAndSalt[1]);
+		userDao.saveAndFlush(user);
+		return new MsgInfo(1,"密码修改成功,请重新登录");
 	}
 }

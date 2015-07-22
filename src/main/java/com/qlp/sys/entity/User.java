@@ -36,7 +36,7 @@ public class User extends TopEntity {
     private String loginName;  //登录名
     private String password;  //密码
     private String name;  //真实姓名
-    private Date birthday;  //出身日期
+    private Date birthday;  //出生日期
     private UserStatus status = UserStatus.ENABLE;  //是否启用账号默认为启用状态
     private Integer sex = Gender.UNKNOWN.ordinal();  //性别
     private String email;  //邮箱地址

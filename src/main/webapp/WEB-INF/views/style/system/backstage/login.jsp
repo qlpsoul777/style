@@ -19,7 +19,7 @@
             text-align: center;
         }
     </style>
-    <script type="text/javascript" src="${ctx}/static/js/jquery.js"></script>
+    <script type="text/javascript" src="${ctx}/static/js/jquery-1.7.min.js"></script>
     <script type="text/javascript" src="${ctx}/static/js/fun.base.js"></script>
     <script type="text/javascript" src="${ctx}/static/js/script.js"></script>
     <script src="${ctx}/static/js/DD_belatedPNG.js" type="text/javascript"></script>

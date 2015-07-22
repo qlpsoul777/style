@@ -21,22 +21,18 @@
     	totalSize = $('#totalSize').val(),
     	pageSize = $('#pageSize').val();
     	PageSync.init(currentPage,pageSize,totalSize);//分页
-    	
+    	//处理全选
     	$('#checkall').on('click',function () {
 	         $('input[name = "chkName"]').prop('checked', $('#checkall').prop('checked'));
 	     });
     });
-    
+    //查询
     function search(){
     	$('#currentPage').val(0);
     	$('#queryForm').submit();
     }
-    
+    //批量删除
     function batchDelete(){
-    	if(validateSelected().length <= 0){
-    		jAlert('请先选择待删除的用户', '选取数据');
-    		return false;
-    	}
     	jConfirm('您确定删除吗？', '删除数据', function(r) {
     		if(r){
     			window.location.href = "${ctx}/user/batchDelete?ids="+validateSelected().join(',');
@@ -45,12 +41,31 @@
     	});
     	return false;
     }
-    
+    //批量禁用/启用
+    function batchEdit(){
+    	window.location.href = "${ctx}/user/batchEdit?ids="+validateSelected().join(',');
+    	return true;
+    }
+    //批量重置密码
+    function batchResetPwd(){
+    	jConfirm('您确定重置所选用户密码吗？', '重置密码', function(r) {
+    		if(r){
+    			window.location.href = "${ctx}/user/batchResetPwd?ids="+validateSelected().join(',');
+    			return true;
+    		}
+    	});
+    	return false;
+    }
+    //批量操作前验证是否选取了数据
     function validateSelected(){
     	var array = [];
     	$('input[name="chkName"]:checked').each(function(){
     		array.push($(this).val()); 
     	});
+    	if(array.length <= 0){
+    		jAlert('请先选择待操作的用户', '选取数据');
+    		return false;
+    	}
     	return array;
     }
     </script>
@@ -78,8 +93,8 @@
 					 <ul class="buttonlist">
 						<li><a class="stdbtn btn_lime" href="${ctx }/user/addUser">新增</a></li>
 						<li><a class="stdbtn btn_red" href="javascript:;" onclick="return batchDelete()">删除</a></li>
-						<li><a class="stdbtn btn_yellow">启用/禁用</a></li>
-						<li><a class="stdbtn btn_red">重置密码</a></li>	
+						<li><a class="stdbtn btn_yellow" href="javascript:;" onclick="return batchEdit()">启用/禁用</a></li>
+						<li><a class="stdbtn btn_red" href="javascript:;" onclick="return batchResetPwd()">重置密码</a></li>	
 				     </ul>
                </div>
              </div>
@@ -99,8 +114,8 @@
                     <tfoot>
                         <tr>
                             <th class="head0" colspan="7" align="center">
-                            <ul class="pagination" id="pageDiv">
-                            </ul>
+	                            <ul class="pagination" id="pageDiv">
+	                            </ul>
 							</th>
                         </tr>
                     </tfoot>
@@ -127,6 +142,7 @@
                             <td class="center">
                             	<c:if test="${user.status eq 'ENABLE'}">使用中</c:if>
                                 <c:if test="${user.status eq 'NOTENABLE'}">已禁用</c:if>
+                                <c:if test="${user.status eq 'LOCKED'}">已锁定</c:if>
                             </td>
                             <td class="center">
                             	<a href="${ctx }/user/editUser?id=${user.id}">修改</a>

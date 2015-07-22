@@ -1,6 +1,7 @@
 package com.qlp.sys.service;
 
 
+import com.qlp.commons.entity.MsgInfo;
 import com.qlp.sys.entity.User;
 
 import java.util.List;
@@ -92,4 +93,34 @@ public interface UserService {
 	 * @return
 	 */
 	List<User> findByIds(String ids);
+
+	/**
+	 * 批量删除禁用/启用用户
+	 * @param userIds
+	 */
+	void batchEdit(String userIds);
+
+	/**
+	 * 批量重置用户密码
+	 * @param userIds
+	 */
+	void batchResetPwd(String userIds);
+
+	/**
+	 * 根据id查询单个用户
+	 * @param userIds
+	 * @return
+	 */
+	User findById(String userIds);
+
+	/**
+	 * 修改用户密码
+	 * @param user
+	 * @param oldPwd
+	 * @param newPwd
+	 * @param repeatNewPwd
+	 * @return
+	 */
+	MsgInfo updatePwd(User user, String oldPwd, String newPwd,
+			String repeatNewPwd);
 }

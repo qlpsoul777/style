@@ -21,7 +21,7 @@
                 /static/** = anon
                 /jcaptcha* = anon
                 /platform/login = jCaptchaValidate,authc
-                /platform/logout = logout
+                /logout = logout
             </value>
         </property>
     </bean>

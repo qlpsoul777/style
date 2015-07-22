@@ -15,6 +15,18 @@
         $(function () {
 			$('#menuTop li').eq(0).addClass('current');
         });
+        function editUserInfo(id){
+        	if(id){
+        		return true;
+        	}
+        	return false;
+        }
+        function editPwd(id){
+        	if(id){
+        		return true;
+        	}
+        	return false;
+        }
     </script>
 </head>
 <body class="withvernav">
@@ -49,10 +61,10 @@
                 	<h4>${user.name }</h4>
                     <span class="email">${user.email }</span>
                     <ul>
-                    	<li><a href="${ctx }/user/editUserInfo/${user.id}">修改资料</a></li>
-                        <li><a href="${ctx }/user/editPwd/${user.id}">密码设置</a></li>
-                        <li><a href="">我的消息</a></li>
-                        <li><a href="${ctx }/">退出</a></li>
+                    	<li><a target="mainFrame"  href="${ctx}/user/editUserInfo/${user.id}" onclick="return editUserInfo('${user.id}')">修改资料</a></li>
+                        <li><a target="mainFrame"  href="${ctx}/user/editPwd/${user.id}" onclick="return editPwd('${user.id}')">密码设置</a></li>
+                        <li><a target="mainFrame" href="">我的消息</a></li>
+                        <li><a href="${ctx }/platform/login">退出</a></li>
                     </ul>
                 </div>
             </div>
