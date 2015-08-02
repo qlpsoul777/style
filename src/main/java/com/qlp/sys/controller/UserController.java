@@ -35,6 +35,7 @@ import com.qlp.sys.service.RoleService;
 import com.qlp.sys.service.UserService;
 import com.qlp.utils.JsonMapper;
 import com.qlp.utils.ParameterUtils;
+import com.qlp.utils.SecurityUtil;
 
 @Controller
 @RequestMapping(value = "/user")
@@ -45,12 +46,12 @@ public class UserController {
 	@Autowired
 	private RoleService roleService;
 	
-	 @InitBinder  
-	 public void initBinder(WebDataBinder binder) {  
-	     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
-	     dateFormat.setLenient(false);  
-	     binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false)); 
-	 }
+	@InitBinder  
+	public void initBinder(WebDataBinder binder) {  
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+	    dateFormat.setLenient(false);  
+	    binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false)); 
+	}
 	 
 	@ModelAttribute("user")
 	public User getBidding(@RequestParam(value = "id", required = false) String id){
@@ -89,55 +90,56 @@ public class UserController {
 	public String addUser(HttpServletRequest request, Model model){
 		List<Role> allRoles = roleService.queryAllUsingRoles();
 		model.addAttribute("allRoles", allRoles);
+		String id = request.getParameter("id");
+		if(StringUtils.isNotBlank(id)){
+			User user = userService.findById(id);
+			model.addAttribute("user", user);
+		}
 		return "/style/system/user/add";
 	}
 	
-	@RequestMapping(value = "/saveUser", method = RequestMethod.POST)
-	public String saveUser(HttpServletRequest request,@ModelAttribute User user){
-		if(StringUtils.isBlank(user.getId())){
-			user.setType(Type.INNER);
+	@RequestMapping(value = "/edit/{opt}", method = RequestMethod.GET)
+	public String edit(HttpServletRequest request,@PathVariable("opt")int opt, Model model){
+		String path = "/style/system/user/edit";
+		if(opt == 1){
+			path = "/style/system/user/editPwd";
+		}
+		String loginName = SecurityUtil.getCurrentUserLoginName();
+		User user = userService.findByLoginName(loginName);
+		model.addAttribute("user", user);
+		return path;
+	}
+	
+	@RequestMapping(value = "/saveUser/{opt}", method = RequestMethod.POST)
+	public String saveUser(HttpServletRequest request,@ModelAttribute User user,@PathVariable("opt")int opt){
+		String path = "redirect:/platform/index";
+		if(opt != 2){
 			String roleIds = request.getParameter("roleIds");
 			userService.setRoles(user,roleIds);
-			userService.createUser(user, ParameterUtils.INITPASSWORD);
-			return "redirect:/user/list/INNER";
+			if(StringUtils.isBlank(user.getId())){
+				userService.createUser(user, ParameterUtils.INITPASSWORD);
+			}
+			path = "redirect:/user/list/INNER";
 		}
 		userService.save(user);
-		return "redirect:/platform/index";
+		return path;
 	}
 	
-	@RequestMapping(value = "/batchDelete", method = RequestMethod.GET)
-	public String batchDelete(HttpServletRequest request){
+	@RequestMapping(value = "/batchOperate/{mark}", method = RequestMethod.GET)
+	public String batchOperate(HttpServletRequest request,@PathVariable("mark")char mark){
 		String userIds = request.getParameter("ids");
-		userService.batchDelete(userIds);
+		switch(mark){
+			case 'D':
+				userService.batchDelete(userIds);
+				break;
+			case 'E':
+				userService.batchEdit(userIds);
+				break;
+			case 'R':
+				userService.batchResetPwd(userIds);
+				break;
+		}
 		return "redirect:/user/list/INNER";
-	}
-	
-	@RequestMapping(value = "/batchEdit", method = RequestMethod.GET)
-	public String batchEdit(HttpServletRequest request){
-		String userIds = request.getParameter("ids");
-		userService.batchEdit(userIds);
-		return "redirect:/user/list/INNER";
-	}
-	
-	@RequestMapping(value = "/batchResetPwd", method = RequestMethod.GET)
-	public String batchResetPwd(HttpServletRequest request){
-		String userIds = request.getParameter("ids");
-		userService.batchResetPwd(userIds);
-		return "redirect:/user/list/INNER";
-	}
-	
-	@RequestMapping(value = "/editUserInfo/{id}", method = RequestMethod.GET)
-	public String editUserInfo(HttpServletRequest request,@PathVariable("id")String id, Model model){
-		User user = userService.findById(id);
-		model.addAttribute("user", user);
-		return "/style/system/user/edit";
-	}
-	
-	@RequestMapping(value = "/editPwd/{id}", method = RequestMethod.GET)
-	public String editPwd(HttpServletRequest request,@PathVariable("id")String id, Model model){
-		User user = userService.findById(id);
-		model.addAttribute("user", user);
-		return "/style/system/user/editPwd";
 	}
 	
 	@RequestMapping(value = "/savePwd", method = RequestMethod.POST)

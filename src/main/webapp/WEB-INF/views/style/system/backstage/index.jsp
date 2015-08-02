@@ -9,11 +9,40 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>style后台管理系统</title>
 	<link rel="stylesheet" href="${ctx}/static/css/platform_index.css" type="text/css" />
+	<link rel="stylesheet" href="${ctx}/static/plugins/ui/jquery-ui.min.css" type="text/css" />
 	<script type="text/javascript" src="${ctx}/static/js/jquery-1.7.min.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/platform_index.js"></script>
+	<script type="text/javascript" src="${ctx}/static/plugins/ui/jquery-ui.min.js"></script>
     <script type="text/javascript">
         $(function () {
 			$('#menuTop li').eq(0).addClass('current');
+			
+			$( "#dialog-link" ).click(function( event ) {
+				$( "#dialog" ).dialog( "open" );
+				event.preventDefault();
+			});
+			
+			$( "#dialog" ).dialog({
+				autoOpen: false,
+				heigh: 600,
+				width: 600,
+				buttons: [
+					{
+						text: "Ok",
+						click: function() {
+							$( this ).dialog( "close" );
+						}
+					},
+					{
+						text: "Cancel",
+						click: function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				]
+			});
+			
+			
         });
         function editUserInfo(id){
         	if(id){
@@ -54,17 +83,17 @@
 					   </c:otherwise>
 					</c:choose>
 					<div class="changetheme">
-						<button class="stdbtn btn_orange">上传头像</button>
+						<button class="stdbtn btn_orange" id="dialog-link">上传头像</button>
                     </div>
                 </div>
                 <div id="userdata" class="userdata">
                 	<h4>${user.name }</h4>
                     <span class="email">${user.email }</span>
                     <ul>
-                    	<li><a target="mainFrame"  href="${ctx}/user/editUserInfo/${user.id}" onclick="return editUserInfo('${user.id}')">修改资料</a></li>
-                        <li><a target="mainFrame"  href="${ctx}/user/editPwd/${user.id}" onclick="return editPwd('${user.id}')">密码设置</a></li>
+                    	<li><a target="mainFrame"  href="${ctx}/user/edit/0" onclick="return editUserInfo('${user.id}')">修改资料</a></li>
+                        <li><a target="mainFrame"  href="${ctx}/user/edit/1" onclick="return editPwd('${user.id}')">密码设置</a></li>
                         <li><a target="mainFrame" href="">我的消息</a></li>
-                        <li><a href="${ctx }/platform/login">退出</a></li>
+                        <li><a href="${ctx}/platform/login">退出</a></li>
                     </ul>
                 </div>
             </div>
@@ -94,6 +123,9 @@
 	<!-- 左侧菜单end -->
 	<!-- 右侧内容start -->
 	<div class="centercontent">
+		<div id="dialog" title="上传头像">
+			
+		</div>
 		<iframe id="mainFrame" name="mainFrame"  src="" frameborder="0" scrolling="auto" width="100%"
                     height="auto" style="position: absolute; margin: 0px; left: 0px; right: 0px; top: 0px;
                      bottom: 0px; height: 570px; z-index: 0; display:

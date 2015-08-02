@@ -32,7 +32,7 @@ public class Module{
     private String permission;  //权限关键字
     private String url;  //链接地址
     private String description;  //描述
-    private Integer sort;  //排序字段
+    private Integer sort = 0;  //排序字段
     private Integer level;  //层级
     private boolean display = Boolean.TRUE;  //是否可见
     private boolean enable = Boolean.TRUE;  //是否启用

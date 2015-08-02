@@ -176,9 +176,7 @@ public class UserServiceImpl implements UserService {
 
 	public void setRoles(User user, String roleIds) {
 		List<Role> roles = roleService.findByIds(roleIds);
-		if((roles != null) && (!roles.isEmpty())){
-			user.setRoles(roles);
-		}	
+		user.setRoles(roles);
 	}
 
 	@Transactional(readOnly=false)

@@ -43,7 +43,7 @@ public class User extends TopEntity {
     private String phoneNum;  //联系方式
     private String address;  //联系地址
     private String imgPath;  //头像地址
-    private Type type;  //用户类型
+    private Type type = Type.INNER;  //用户类型
     private String salt;  //加盐值（用作加密解密用）
     private List<Role> roles;
 

@@ -16,4 +16,6 @@ public interface RoleDao extends QlpJpaRepository<Role, String> {
 	@Query("select r from Role r where r.enable = 1")
 	List<Role> findAllUsingRoles();
 
+	Role findByName(String name);
+
 }

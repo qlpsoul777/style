@@ -54,7 +54,7 @@
 	</div>
 	<div id="contentwrapper" class="contentwrapper">
 		<div id="validation" class="subcontent">
-			<form id="editForm" class="stdform" method="post" target="_top" action="${ctx }/user/saveUser">
+			<form id="editForm" class="stdform" method="post" target="_top" action="${ctx }/user/saveUser/2">
 				<input type="hidden" name="id" value="${user.id }"/>
 			    <p>
 			    	<label><span class="mustLable">*</span>真实姓名:</label>

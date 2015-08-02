@@ -35,7 +35,7 @@
     function batchDelete(){
     	jConfirm('您确定删除吗？', '删除数据', function(r) {
     		if(r){
-    			window.location.href = "${ctx}/user/batchDelete?ids="+validateSelected().join(',');
+    			window.location.href = "${ctx}/user/batchOperate/D?ids="+validateSelected().join(',');
     			return true;
     		}
     	});
@@ -43,14 +43,14 @@
     }
     //批量禁用/启用
     function batchEdit(){
-    	window.location.href = "${ctx}/user/batchEdit?ids="+validateSelected().join(',');
+    	window.location.href = "${ctx}/user/batchOperate/E?ids="+validateSelected().join(',');
     	return true;
     }
     //批量重置密码
     function batchResetPwd(){
     	jConfirm('您确定重置所选用户密码吗？', '重置密码', function(r) {
     		if(r){
-    			window.location.href = "${ctx}/user/batchResetPwd?ids="+validateSelected().join(',');
+    			window.location.href = "${ctx}/user/batchOperate/R?ids="+validateSelected().join(',');
     			return true;
     		}
     	});
@@ -103,17 +103,18 @@
                     <thead>
                         <tr>
                         	<th class="head0" align="center" width="3%"><input id="checkall" class="checkall" type="checkbox"/></th>
-                            <th class="head1">用户名</th>
-                            <th class="head0">角色名</th>
-                            <th class="head1">性别</th>
-                            <th class="head0">邮箱</th>
-                            <th class="head1">状态</th>
+                            <th class="head1">登录名</th>
+                            <th class="head0">姓名</th>
+                            <th class="head1">角色名</th>
+                            <th class="head0">性别</th>
+                            <th class="head1">邮箱</th>
+                            <th class="head0">状态</th>
                             <th class="head1">操作</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th class="head0" colspan="7" align="center">
+                            <th class="head0" colspan="8" align="center">
 	                            <ul class="pagination" id="pageDiv">
 	                            </ul>
 							</th>
@@ -123,6 +124,7 @@
                     <c:forEach items="${pageInfo.content}" var="user">
                     	<tr>
                         	<td align="center"><input type="checkbox" name="chkName" value="${user.id}"/></td>
+                            <td>${user.loginName}</td>
                             <td>${user.name}</td>
                             <td>
 	                            <c:forEach items="${user.roles}" var="role">
@@ -145,7 +147,7 @@
                                 <c:if test="${user.status eq 'LOCKED'}">已锁定</c:if>
                             </td>
                             <td class="center">
-                            	<a href="${ctx }/user/editUser?id=${user.id}">修改</a>
+                            	<a href="${ctx }/user/addUser?id=${user.id}">修改</a>
                             </td>
                         </tr>
                     </c:forEach> 
@@ -153,18 +155,15 @@
                 </table>
 		</div>
 		<div id="activities" class="subcontent" style="display: none;">
-			<form id="queryForm" action="${ctx }/user/list/INNER" method="get">
+			<form id="queryForm" action="${ctx }/user/list/OUTTER" method="get">
 			  	<input id="totalSize" type="hidden" name="totalSize" value="${pageInfo.totalPages }"/>
 			  	<input id="pageSize" type="hidden" name="pageSize" value="${pageInfo.size }"/>
 			  	<input id="currentPage" type="hidden" name="currentPage" value="${pageInfo.number }"/>
 				<div class="overviewhead">
 	                                             用户名:<input  id="userName" name="userName" type="text">&nbsp;&nbsp;
-				         角色名:<input  id="roleName" name="roleName" type="text">&nbsp;&nbsp;
 				   <a href="" class="btn btn2 btn_blue btn_search radius50"><span>查询</span></a>
 				   <div class="overviewselect">
 						 <ul class="buttonlist">
-							<li><button class="stdbtn btn_lime">新增</button></li>
-							<li><button class="stdbtn btn_red">删除</button></li>
 							<li><button class="stdbtn btn_yellow">启用/禁用</button></li>	
 					     </ul>
 	               </div>
