@@ -2,7 +2,7 @@ DateTools={
 	languages:['zh_CN','en_US'],
 	common:function($element,language){
 		var index = this.languages.indexOf(language);
-		var i18n_obj;
+		var i18n_obj = null;
 		if(index < 0 ){
 			language = this.languages[0];
 			switch(language){

@@ -3,7 +3,7 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
         version="2.1">
 
-    <display-name>qlp_pageTag</display-name>
+    <display-name>qlp_commonTag</display-name>
     <tlib-version>1.0</tlib-version>
     <short-name>qlp</short-name>
 
@@ -48,6 +48,34 @@
             <description>要截取的字符串的长度</description>
             <name>length</name>
             <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    
+    <tag>
+    	<description>jsp模板继承标签</description>
+    	<name>extends</name>
+        <tag-class>com.qlp.commons.tags.JspExtendsTag</tag-class>
+        <body-content>JSP</body-content>
+        
+        <attribute>
+            <description>继承的dom名称</description>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    
+    <tag>
+    	<description>jsp模板填充内容标签</description>
+    	<name>fill</name>
+        <tag-class>com.qlp.commons.tags.JspFillTag</tag-class>
+        <body-content>JSP</body-content>
+        
+        <attribute>
+            <description>填充目标的dom名称</description>
+            <name>name</name>
+            <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>

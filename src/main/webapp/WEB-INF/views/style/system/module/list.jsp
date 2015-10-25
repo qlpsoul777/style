@@ -10,9 +10,10 @@
 	<title>权限管理</title>
 	<link rel="stylesheet" href="${ctx}/static/css/platform_index.css" type="text/css"/>
 	<link rel="stylesheet" href="${ctx}/static/css/TreeGrid.css" type="text/css"/>
-	
+	<link rel="stylesheet" href="${ctx}/static/css/alert/jquery.alerts.css" type="text/css"/>
 	<script type="text/javascript" src="${ctx}/static/js/jquery-1.7.min.js"></script>
 	<script type="text/javascript" src="${ctx}/static/js/TreeGrid.js"></script>
+	<script type="text/javascript" src="${ctx}/static/js/alert/jquery.alerts.js"></script>
     <script type="text/javascript">
         /*单击数据行后触发该事件
         id：行的id
@@ -21,6 +22,7 @@
         */
         function itemClickEvent(id, index, data) {
             jQuery("#currentRow").val(id + ", " + index + ", " + TreeGrid.json2str(data));
+            alert(TreeGrid.json2str(data));
         }
 
         function customStatus(row, col){
@@ -35,9 +37,16 @@
         function customLook(row, col) {
             return "<a href='' style='color:blue;'>修改</a>";
         }
-        /*
-        展开、关闭所有节点。
-        isOpen=Y表示展开，isOpen=N表示关闭
+        /**
+       		 新增同级权限
+        */
+        function addSameLevelM(){
+        	
+    		return false;
+        }
+        /**
+       		 展开、关闭所有节点。
+        	isOpen=Y表示展开，isOpen=N表示关闭
         */
         function expandAll(isOpen) {
             treeGrid.expandAll(isOpen);
@@ -60,11 +69,13 @@ $(function(){
             itemClick: "itemClickEvent",
             columns: [
                 {headerText: "", headerAlign: "center", dataAlign: "center", width: "5%" },
-                {headerText: "名称", dataField: "name", headerAlign: "center", handler: "customOrgName", width: "30%"},
-                {headerText: "权限关键字", dataField: "permission", headerAlign: "center", dataAlign: "center", width: "20%" },
-                {headerText: "url", dataField: "url", headerAlign: "center", dataAlign: "center", width: "30%" },
+                {headerText: "名称", dataField: "name", headerAlign: "center", handler: "customOrgName", width: "25%"},
+                {headerText: "权限关键字", dataField: "permission", headerAlign: "center", dataAlign: "center", width: "25%" },
+                {headerText: "url", dataField: "url", headerAlign: "center", dataAlign: "center", width: "25%" },
+                {headerText: "排序", dataField: "sort", headerAlign: "center", dataAlign: "center", width: "5%" },
+                {headerText: "层级", dataField: "level", headerAlign: "center", dataAlign: "center", width: "5%" },
                 {headerText: "状态", dataField: "enable", headerAlign: "center",handler: "customStatus", dataAlign: "center", width: "5%" },
-                {headerText: "操作", headerAlign: "center", dataAlign: "center", width: "10%", handler: "customLook"}
+                {headerText: "操作", headerAlign: "center", dataAlign: "center", width: "5%", handler: "customLook"}
             ],
             data:data
         };
@@ -85,7 +96,7 @@ $(function(){
 	<div class="overviewhead">
 		<div class="overviewselect">
 			 <ul class="buttonlist">
-				<li><a class="stdbtn btn_lime" href="${ctx }/user/addUser">新增同级权限</a></li>
+				<li><a class="stdbtn btn_lime" onclick="addSameLevelM()">新增同级权限</a></li>
 				<li><a class="stdbtn btn_red" href="javascript:;" onclick="return batchDelete()">新增下级权限</a></li>
 				<li><a class="stdbtn btn_yellow" href="javascript:;" onclick="return batchEdit()">删除</a></li>
 				<li><a class="stdbtn btn_red" href="javascript:;" onclick="return batchResetPwd()">禁用/启用</a></li>	

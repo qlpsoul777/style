@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 public class PageTag extends TagSupport {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8616260876467920354L;
 	private static Logger logger = LoggerFactory.getLogger(PageTag.class);
     private Page<Object> page;  //分页对象
     private StringBuilder html;  //输出的HTML内容

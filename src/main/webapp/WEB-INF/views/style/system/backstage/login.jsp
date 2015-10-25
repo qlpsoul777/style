@@ -25,7 +25,7 @@
     <script src="${ctx}/static/js/DD_belatedPNG.js" type="text/javascript"></script>
     <script >
         $(document).ready(function(){
-            DD_belatedPNG.fix('.png')
+            DD_belatedPNG.fix('.png');
         });
 
         $(function() {

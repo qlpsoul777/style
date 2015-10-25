@@ -14,7 +14,7 @@ import java.util.Date;
 public class TopEntity {
     protected String id;//主键
     protected Date createTime = new Date();//创建时间
-    protected Date updateTime;//更新时间
+    protected Date updateTime = new Date();//更新时间
 
     @Id
     @GeneratedValue(generator = "system-uuid")

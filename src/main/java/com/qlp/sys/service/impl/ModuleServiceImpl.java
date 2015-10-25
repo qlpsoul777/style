@@ -83,7 +83,9 @@ public class ModuleServiceImpl implements ModuleService {
 				node.setName(module.getName());
 				node.setPermission(module.getPermission());
 				node.setUrl(module.getUrl());
-				node.setEnable(module.isEnable()); 
+				node.setEnable(module.isEnable());
+				node.setSort(module.getSort());
+				node.setLevel(module.getLevel());
 				node.setChildren(getChildren(module.getChildren()));
 				nodes.add(node);
 			}

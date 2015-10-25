@@ -113,7 +113,7 @@
     <jsp-config>
         <taglib>
             <taglib-uri>/qlpTagLib</taglib-uri>
-            <taglib-location>/WEB-INF/taglib/pageTag.tld</taglib-location>
+            <taglib-location>/WEB-INF/taglib/commonTag.tld</taglib-location>
         </taglib>
     </jsp-config>
 </web-app>
